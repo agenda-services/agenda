@@ -22,6 +22,9 @@ dependencies {
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-function-web', version: '4.1.2'
 	implementation 'org.projectlombok:lombok:1.18.20'
 
+	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-dependencies', version: '2023.0.2', ext: 'pom'
+
 	// https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
 	testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.7.0'
 
@@ -42,6 +45,12 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/org.mockito/mockito-core
 	testImplementation group: 'org.mockito', name: 'mockito-core', version: '5.12.0'
+
+	// https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-lambda
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-lambda', version: '1.9.22'
+
+	// https://mvnrepository.com/artifact/com.amazonaws/aws-lambda-java-events
+	implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '3.11.6'
 
 
 //	testImplementation 'org.springframework.boot:spring-boot-starter-test'
