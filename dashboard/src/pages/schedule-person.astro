@@ -1,0 +1,11 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import FormScheduleAppointment from "../components/appointments/FormScheduleAppointment.tsx";
+---
+
+<MainLayout title="schedule">
+  <main transition:animate="slide">
+    <h2 class="text-xl mb-3">Agendar una cita para</h2>
+    <FormScheduleAppointment client:load />
+  </main>
+</MainLayout>
