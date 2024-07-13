@@ -3,10 +3,15 @@ package com.agenda.core.shared.generator.id;
 import java.util.UUID;
 
 public class GeneratorIDFactory {
+    private static String getToken(){
+        return UUID.randomUUID().toString().replace("-", "");
+    }
 
-    public static String generateClientID(){
-        String uniqueID = UUID.randomUUID().toString().replace("-", "");
+    public static String generateClientId(){
+        return Prefixes.CLIENT.getType() + getToken();
+    }
 
-        return Prefixes.CLIENT.getType() + uniqueID;
+    public static String generateAppointmentId(){
+        return Prefixes.CLIENT.getType() + getToken();
     }
 }
