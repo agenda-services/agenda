@@ -1,7 +1,7 @@
 package com.agenda.core.clients.functions;
 
 import com.agenda.core.clients.models.Client;
-import com.agenda.core.clients.models.ClientCreationDTO;
+import com.agenda.core.clients.models.ClientCreateDTO;
 import com.agenda.core.clients.repositories.ClientRepository;
 import com.agenda.core.shared.serializer.Serializer;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -32,7 +32,7 @@ public class CreateClient implements Function<APIGatewayProxyRequestEvent, APIGa
             throw new Exception("Invalid request");
         }
 
-        ClientCreationDTO createClientDTO = serializer.fromJson(clientData, ClientCreationDTO.class);
+        ClientCreateDTO createClientDTO = serializer.fromJson(clientData, ClientCreateDTO.class);
         if(createClientDTO == null){
             throw new Exception("Invalid request");
         }

@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ClientCreationDTO {
+public class ClientCreateDTO {
 
     @SerializedName("first_name")
     private String firstName;
@@ -24,16 +24,8 @@ public class ClientCreationDTO {
     @SerializedName("address")
     private String address;
 
-    public ClientCreationDTO(String firstName, String lastName, String phoneNumber, String email, String address) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.address = address;
-    }
-
     public Client toClient() throws Exception{
-        String id = GeneratorIDFactory.generateClientID();
+        String id = GeneratorIDFactory.generateClientId();
         return new Client(id, this.firstName, this.lastName, this.phoneNumber, this.email, this.address);
     }
 

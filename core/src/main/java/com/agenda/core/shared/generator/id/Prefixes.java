@@ -1,7 +1,8 @@
 package com.agenda.core.shared.generator.id;
 
 public enum Prefixes {
-    CLIENT("CID");
+    CLIENT("CID"),
+    APPOINTMENT("AID");
 
     private String type;
 
@@ -10,8 +11,6 @@ public enum Prefixes {
     }
 
     public String getType() {
-
         return type;
-
     }
 }
