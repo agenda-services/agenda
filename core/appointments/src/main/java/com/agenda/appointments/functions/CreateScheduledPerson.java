@@ -30,10 +30,10 @@ public class CreateScheduledPerson implements RequestHandler<APIGatewayProxyRequ
         String body = input.getBody();
         if(body == null || body.equals("")){
             throw errorMissingBody;
-        }>:
+        }
 
         List<NameValuePair> pairs = URLEncodedUtils.parse(body, StandardCharsets.UTF_8);
-        Map<String, String> params = new HashMap();
+        Map<String, String> params = new HashMap<String, String>();
         for (NameValuePair pair : pairs){
             params.put(pair.getName(), pair.getValue());
         }

@@ -39,13 +39,18 @@ public class GetScheduledPerson implements RequestHandler<APIGatewayProxyRequest
             Person person = personService.getPersonById(pathParameters.get("id"));
             String personResponse = serializer.toJson(person);
             return new APIGatewayProxyResponseEvent().withStatusCode(HttpStatus.SC_OK).withBody(personResponse);
-        } catch (Exception e) {
+        } catch (Error e) {
             APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
             response.withBody(String.format("{\"message\": \"%s\"}", e));
 
             if (e.equals(PersonService.errorPersonNotFound)) {
                 return response.withStatusCode(HttpStatus.SC_NOT_FOUND);
             }
+
+            return response.withStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
+            response.withBody(String.format("{\"message\": \"%s\"}", e));
 
             return response.withStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
         }

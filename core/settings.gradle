@@ -11,6 +11,5 @@ plugins {
 }
 
 rootProject.name = 'core'
-include('appointments')
-include 'services'
+include('appointments', 'services')
 

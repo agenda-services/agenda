@@ -1,69 +1,60 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-group 'com.agenda'
+group 'com.agenda.appointments'
 version '1.0-SNAPSHOT'
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-repositories {
-    mavenCentral()
-    maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots'
-    }
-}
 
 dependencies {
     implementation project(':services')
-
-    implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.3'
-    implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '3.11.6'
-    implementation group: 'com.amazonaws', name: 'aws-java-sdk-lambda', version: '1.9.22'
-    implementation group: 'dev.morphia.morphia', name: 'morphia', version: '2.4.14', ext: 'pom'
-    implementation group: 'dev.morphia.morphia', name: 'core', version: '1.6.1'
-    implementation group: 'dev.morphia.morphia', name: 'morphia-core', version: '2.4.14'
-    implementation 'org.projectlombok:lombok:1.18.34'
-    implementation 'com.google.code.gson:gson:2.8.9'
-
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.3'
-
 }
 
-test {
-    useJUnitPlatform()
+def tasksList = []
+
+def functionsDir = file('src/main/java/com/agenda/appointments/functions')
+
+if (!functionsDir.exists() || !functionsDir.isDirectory()) {
+    throw new GradleException("Not found directory")
 }
 
-def functions = ['GetScheduledPerson', 'CreateScheduledPerson']
+functionsDir.eachFile { file ->
+    def fileName = file.name.replaceAll(/\.java$/, '')
+    def taskName = "shadowJar${fileName}"
 
-functions.each { functionName ->
-    tasks.create(name: "shadowJar${functionName}", type: com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar) {
-        archiveBaseName.set(functionName.toLowerCase())
+    println "[$taskName]: task created"
+
+    tasks.create(name: taskName,type: ShadowJar) {
+        archiveBaseName.set(file.name.toLowerCase())
         archiveClassifier.set('')
         archiveVersion.set('')
         from sourceSets.main.output
         configurations = [project.configurations.runtimeClasspath]
+
         manifest {
             attributes(
-                    'Main-Class': "com.agenda.appointments.functions.${functionName}"
+                    'Main-Class': "com.agenda.appointments.functions.${fileName}"
             )
         }
     }
+
     artifacts {
-        archives tasks.named("shadowJar${functionName}")
+        archives tasks.named(taskName)
     }
+
+    tasksList.add(taskName)
 }
 
 task buildAllShadowJars {
-    dependsOn functions.collect { tasks.named("shadowJar${it}") }
+    dependsOn tasksList.collect { functionName ->
+        tasks.named(functionName)
+    }
 }
 
 build.dependsOn buildAllShadowJars
+
+tasksList.clear()
+
+

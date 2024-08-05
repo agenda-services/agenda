@@ -17,7 +17,7 @@ public class GetScheduledPersonTest {
     @Test
     public void testHandleRequestNotFound() {
         APIGatewayProxyRequestEvent request = new APIGatewayProxyRequestEvent();
-        Map<String, String> pathParameters = new HashMap();
+        Map<String, String> pathParameters = new HashMap<String, String>();
         pathParameters.put("id", "1");
         request.setPathParameters(pathParameters);
 
@@ -32,7 +32,7 @@ public class GetScheduledPersonTest {
     @Test
     public void testHandleRequestFound() {
         APIGatewayProxyRequestEvent request = new APIGatewayProxyRequestEvent();
-        Map<String, String> pathParameters = new HashMap();
+        Map<String, String> pathParameters = new HashMap<String, String>();
         pathParameters.put("id", "PIDf44c6792824b461ebff49f4c24fa4b36");
         request.setPathParameters(pathParameters);
 

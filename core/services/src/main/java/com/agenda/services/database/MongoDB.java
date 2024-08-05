@@ -7,10 +7,6 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
-
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class MongoDB {
@@ -18,7 +14,7 @@ public class MongoDB {
     private MongoDatabase database;
     private MongoClient mongoClient;
     private static final String DATABASE_NAME = "agenda";
-    private static final String CONNECTION_STRING = "mongodb+srv://jballesterosagenda:0pzJq69SNK3CVsz4@cluster0.zitbjnw.mongodb.net/?retryWrites=true&w=majority";
+    private static final String CONNECTION_STRING = "";
 
     private MongoDB() {
         MongoClientSettings settings = MongoClientSettings.builder()

@@ -3,22 +3,16 @@ package com.agenda.appointments.repositories;
 import com.agenda.appointments.models.Person;
 import com.agenda.services.database.MongoDB;
 import com.agenda.services.serializer.ISerializer;
-import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import org.bson.Document;
-import org.bson.types.ObjectId;
-
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class PersonRepository {
     private final MongoCollection<Document> collection;
     private final ISerializer serializer;
-    private final MongoDB DB;
     private final String COLLECTION_NAME = "people";
 
     public PersonRepository(ISerializer serializer) {
-        this.DB = MongoDB.getInstance();
         this.collection = MongoDB.getInstance()
                 .getCollection(COLLECTION_NAME);
         this.serializer = serializer;
