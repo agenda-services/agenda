@@ -18,7 +18,7 @@ public class GetScheduledPerson implements RequestHandler<APIGatewayProxyRequest
     private static ISerializer serializer = new Serializer();
 
     public GetScheduledPerson() {
-        this.personService = new PersonService(serializer);
+        this.personService = new PersonService();
     }
 
     @Override
@@ -43,7 +43,7 @@ public class GetScheduledPerson implements RequestHandler<APIGatewayProxyRequest
             APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
             response.withBody(String.format("{\"message\": \"%s\"}", e));
 
-            if (e.equals(PersonService.errorPersonNotFound)) {
+            if (e.equals(PersonService.errPersonNotFound)) {
                 return response.withStatusCode(HttpStatus.SC_NOT_FOUND);
             }
 

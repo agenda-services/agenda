@@ -1,43 +1,50 @@
 package com.agenda.appointments.repositories;
 
 import com.agenda.appointments.models.Person;
-import com.agenda.services.database.MongoDB;
-import com.agenda.services.serializer.ISerializer;
-import com.mongodb.client.MongoCollection;
-import org.bson.Document;
+import com.agenda.services.aws.DynamoDB;
 import java.time.LocalDateTime;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+
 
 public class PersonRepository {
-    private final MongoCollection<Document> collection;
-    private final ISerializer serializer;
-    private final String COLLECTION_NAME = "people";
+    private DynamoDbTable<Person> table;
+    private final String TABLE_NAME = "people";
 
-    public PersonRepository(ISerializer serializer) {
-        this.collection = MongoDB.getInstance()
-                .getCollection(COLLECTION_NAME);
-        this.serializer = serializer;
+    public static final Error errMissingPersonId = new Error("missing person_id");
+
+    public PersonRepository(){
+        this.table = DynamoDB.getTable(TABLE_NAME, Person.class);
     }
 
-    public Person create(Person person) throws Exception {
+    public Person create(Person person) throws Error {
+        if(person.getPersonId() == null || person.getPersonId().isEmpty()){
+            throw errMissingPersonId;
+        }
+
         person.setCreatedAt(LocalDateTime.now());
         person.setUpdatedAt(LocalDateTime.now());
 
-        String jsonString = serializer.toJson(person);
-        Document doc = Document.parse(jsonString);
-
-        collection.insertOne(doc);
+        table.putItem(person);
 
         return person;
     }
 
-    public Person getPersonById(String personId) throws Exception {
-        Document query = new Document("_id", personId);
-        Document result = collection.find(query).first();
-
-        if (result == null) {
-            return null;
+    public Person getPersonById(String personId) throws Error {
+        if(personId.isEmpty()) {
+            throw errMissingPersonId;
         }
 
-        return serializer.fromJson(result.toJson(), Person.class);
+        Key key = Key.builder()
+                .partitionValue(personId)
+                .build();
+
+        return table.getItem(i -> i.key(key));
+    }
+
+    protected void initMock(DynamoDbClient dynamoDbClient, DynamoDbTable<Person> table){
+        this.table = table;
+        DynamoDB.initMock(dynamoDbClient);
     }
 }

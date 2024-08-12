@@ -18,12 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 public class CreateScheduledPerson implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-    private IPersonService personService = null;
+    private IPersonService personService;
     static final Error errorMissingBody = new Error("missing body");
     static final Error errorInternalServerError = new Error("something wrong saving person");
 
     public CreateScheduledPerson() {
-        this.personService = new PersonService(new Serializer());
+        this.personService = new PersonService();
     }
 
     private Map<String, String> validateRequest(APIGatewayProxyRequestEvent input) throws Exception {
@@ -64,8 +64,6 @@ public class CreateScheduledPerson implements RequestHandler<APIGatewayProxyRequ
 
         person.setFirstName(params.get("first_name"));
         person.setLastName(params.get("last_name"));
-        person.setEmail(params.get("email"));
-        person.setAddress(params.get("address"));
         person.setPhoneNumber(params.get("phone_number"));
 
         Person personSaved;
