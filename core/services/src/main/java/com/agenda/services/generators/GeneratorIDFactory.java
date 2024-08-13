@@ -8,7 +8,7 @@ public class GeneratorIDFactory {
     }
 
     public static String generatePersonId(){
-        return Prefixes.PERSONID.getType() + getToken();
+        return Prefixes.PERSON.getType() + getToken();
     }
 
     public static String generateAppointmentId(){

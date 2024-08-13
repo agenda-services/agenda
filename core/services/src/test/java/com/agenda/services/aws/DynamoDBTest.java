@@ -4,13 +4,19 @@ import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.*;
 
 class DynamoDBTest {
 
     @Test
     void getInstance() {
-        DynamoDB.initMock(mock(DynamoDbClient.class));
+        try {
+            new DynamoDB();
+        } catch (Exception e){
+            assertThat(e.getMessage()).contains("Cannot instantiate this class");
+        }
+
+        DynamoDB.initMock(null);
 
         DynamoDbClient instanceOne = DynamoDB.getInstance();
         DynamoDbClient instanceTwo = DynamoDB.getInstance();

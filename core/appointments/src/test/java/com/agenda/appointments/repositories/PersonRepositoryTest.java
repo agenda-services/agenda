@@ -3,19 +3,23 @@ package com.agenda.appointments.repositories;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.function.Consumer;
 
 import com.agenda.appointments.models.Person;
-import com.agenda.services.aws.DynamoDB;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.GetItemEnhancedRequest;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 class PersonRepositoryTest {
-    @InjectMocks
-    PersonRepository personRepository = new PersonRepository();
+    PersonRepository personRepository;
+
+    @BeforeEach
+    void setUp(){
+        personRepository = new PersonRepository();
+    }
 
     @Test
     void testCreatePersonFailed() {
@@ -25,7 +29,7 @@ class PersonRepositoryTest {
             Person person = new Person();
             personRepository.create(person);
         } catch (Error e){
-            assertEquals(e, PersonRepository.errMissingPersonId);
+            assertEquals(e, PersonRepository.ERROR_MISSING_PERSON_ID);
         }
     }
 
@@ -53,16 +57,15 @@ class PersonRepositoryTest {
         try{
             personRepository.getPersonById("PID123");
         } catch (Error e){
-            assertEquals(e, PersonRepository.errMissingPersonId);
+            assertEquals(e, PersonRepository.ERROR_MISSING_PERSON_ID);
         }
     }
 
     @Test
     void testGetPersonByIdSuccess() {
         DynamoDbTable mockTable = Mockito.mock(DynamoDbTable.class);
-        Mockito.when(mockTable.getItem((GetItemEnhancedRequest) Mockito.any())).thenReturn(new Person("PID123", "", "", "", null, null));
+        Mockito.when(mockTable.getItem((Consumer<GetItemEnhancedRequest.Builder>) Mockito.any())).thenReturn(new Person("PID123", "", "", "", null, null));
         personRepository.initMock(Mockito.mock(DynamoDbClient.class), mockTable);
-
 
         Person person = personRepository.getPersonById("PID123");
         assertEquals("PID123", person.getPersonId());

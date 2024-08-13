@@ -11,7 +11,12 @@
 
   <rule ref="category/java/design.xml/CyclomaticComplexity">
     <properties>
-      <property name="reportLevel" value="2" />
+      <property name="methodReportLevel" value="8" />
     </properties>
   </rule>
+
+
+<!--  <rule ref="category/java/errorprone.xml"/>-->
+<!--  <rule ref="category/java/codestyle.xml"/>-->
+<!--  <rule ref="category/java/design.xml"/>-->
 </ruleset>

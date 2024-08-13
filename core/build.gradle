@@ -1,11 +1,13 @@
 plugins {
     id 'java'
     id 'pmd'
+    id 'jacoco'
 }
 
 allprojects {
     apply plugin: 'pmd'
     apply plugin: 'java'
+    apply plugin: 'jacoco'
 
     java {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -14,11 +16,34 @@ allprojects {
 
     test {
         useJUnitPlatform()
+        finalizedBy jacocoTestReport
+    }
+
+    jacoco {
+        toolVersion = "0.8.11"
+    }
+
+    jacocoTestReport {
+        dependsOn test
+
+        reports {
+            xml.required = true
+            html.required = true
+        }
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                limit {
+                    minimum = 0.6
+                }
+            }
+        }
     }
 
     pmd {
         toolVersion = '6.50.0'
-        ruleSets = []
         ruleSetFiles = files("$rootDir/config/pmd/ruleset.xml")
     }
 
@@ -31,4 +56,6 @@ allprojects {
 
     check.dependsOn pmdMain
     check.dependsOn pmdTest
+    check.dependsOn jacocoTestReport
+    check.dependsOn jacocoTestCoverageVerification
 }

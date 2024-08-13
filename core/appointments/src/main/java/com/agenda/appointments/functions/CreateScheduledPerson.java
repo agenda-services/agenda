@@ -3,7 +3,6 @@ package com.agenda.appointments.functions;
 import com.agenda.appointments.models.Person;
 import com.agenda.appointments.services.IPersonService;
 import com.agenda.appointments.services.PersonService;
-import com.agenda.services.serializer.Serializer;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
@@ -19,17 +18,21 @@ import java.util.Map;
 
 public class CreateScheduledPerson implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
     private IPersonService personService;
-    static final Error errorMissingBody = new Error("missing body");
-    static final Error errorInternalServerError = new Error("something wrong saving person");
+    static final Error ERROR_MISSING_BODY = new Error("missing body");
+    static final Error ERROR_INTERNAL_SERVER = new Error("something wrong saving person");
 
     public CreateScheduledPerson() {
         this.personService = new PersonService();
     }
 
-    private Map<String, String> validateRequest(APIGatewayProxyRequestEvent input) throws Exception {
+    public CreateScheduledPerson(PersonService personService) {
+        this.personService = personService;
+    }
+
+    private Map<String, String> validateRequest(APIGatewayProxyRequestEvent input) throws Error {
         String body = input.getBody();
-        if(body == null || body.equals("")){
-            throw errorMissingBody;
+        if(body == null || body.isEmpty()){
+            throw ERROR_MISSING_BODY;
         }
 
         List<NameValuePair> pairs = URLEncodedUtils.parse(body, StandardCharsets.UTF_8);
@@ -43,21 +46,14 @@ public class CreateScheduledPerson implements RequestHandler<APIGatewayProxyRequ
 
     @Override
     public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent input, Context context) {
-        if(personService == null){
-            System.out.println("no person service");
-            return new APIGatewayProxyResponseEvent()
-                    .withStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                    .withBody(String.format("\"message\" : \"%s\"", errorInternalServerError));
-        }
-
         Map<String, String> params;
 
         try {
             params = validateRequest(input);
-        } catch (Exception e) {
+        } catch (Error e) {
             return new APIGatewayProxyResponseEvent()
                     .withStatusCode(HttpStatus.SC_BAD_REQUEST)
-                    .withBody(String.format("\"message\" : \"%s\"", errorMissingBody));
+                    .withBody(String.format("\"message\" : \"%s\"", ERROR_MISSING_BODY.getMessage()));
         }
 
         Person person = new Person();
@@ -70,11 +66,10 @@ public class CreateScheduledPerson implements RequestHandler<APIGatewayProxyRequ
 
         try {
             personSaved = personService.create(person);
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (Error e) {
             return new APIGatewayProxyResponseEvent()
-                    .withStatusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                    .withBody(String.format("\"message\" : \"%s\"", errorInternalServerError));
+                    .withStatusCode(HttpStatus.SC_BAD_REQUEST)
+                    .withBody(String.format("\"message\" : \"%s\"", ERROR_INTERNAL_SERVER.getMessage()));
         }
 
         return new APIGatewayProxyResponseEvent()

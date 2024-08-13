@@ -43,7 +43,7 @@ public class GetScheduledPerson implements RequestHandler<APIGatewayProxyRequest
             APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
             response.withBody(String.format("{\"message\": \"%s\"}", e));
 
-            if (e.equals(PersonService.errPersonNotFound)) {
+            if (e.equals(PersonService.ERROR_PERSON_NOT_FOUND)) {
                 return response.withStatusCode(HttpStatus.SC_NOT_FOUND);
             }
 

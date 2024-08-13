@@ -1,10 +1,10 @@
 package com.agenda.services.generators;
 
 public enum Prefixes {
-    PERSONID("PID"),
+    PERSON("PID"),
     APPOINTMENT("AID");
 
-    private String type;
+    private final String type;
 
     Prefixes(String type){
         this.type = type;

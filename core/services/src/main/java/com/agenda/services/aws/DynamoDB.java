@@ -9,6 +9,10 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 
 public class DynamoDB {
+    DynamoDB() {
+        throw new UnsupportedOperationException("Cannot instantiate this class");
+    }
+
     private static DynamoDbClient dynamoDbClient;
     private static final Region REGION = Region.of(Environment.getString("AWS_REGION"));
 
