@@ -1,0 +1,83 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group 'com.agenda.appointments'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
+    }
+}
+
+dependencies {
+    implementation project(':services')
+
+    implementation 'org.projectlombok:lombok:1.18.34'
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'software.amazon.awssdk:dynamodb:2.20.2'
+    implementation 'software.amazon.awssdk:dynamodb-enhanced:2.20.0'
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.3'
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '3.11.6'
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-lambda', version: '1.9.22'
+    implementation 'io.github.cdimascio:java-dotenv:5.2.2'
+
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.34'
+
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.3'
+    testImplementation 'org.mockito:mockito-core:5.0.0'
+
+}
+
+def tasksList = []
+
+def functionsDir = file('src/main/java/com/agenda/appointments/functions')
+
+if (!functionsDir.exists() || !functionsDir.isDirectory()) {
+    throw new GradleException("Not found directory")
+}
+
+functionsDir.eachFile { file ->
+    def fileName = file.name.replaceAll(/\.java$/, '')
+    def taskName = "shadowJar${fileName}"
+
+    println "[$taskName]: task created"
+
+    tasks.create(name: taskName,type: ShadowJar) {
+        archiveBaseName.set(file.name.toLowerCase())
+        archiveClassifier.set('')
+        archiveVersion.set('')
+        from sourceSets.main.output
+        configurations = [project.configurations.runtimeClasspath]
+
+        manifest {
+            attributes(
+                    'Main-Class': "com.agenda.appointments.functions.${fileName}"
+            )
+        }
+    }
+
+    artifacts {
+        archives tasks.named(taskName)
+    }
+
+    tasksList.add(taskName)
+}
+
+task buildAllShadowJars {
+    dependsOn tasksList.collect { functionName ->
+        tasks.named(functionName)
+    }
+}
+
+build.dependsOn buildAllShadowJars
+
+tasksList.clear()
