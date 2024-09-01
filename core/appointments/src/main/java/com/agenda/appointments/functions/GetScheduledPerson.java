@@ -14,11 +14,11 @@ import org.apache.http.HttpStatus;
 import java.util.Map;
 
 public class GetScheduledPerson implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
-    private IPersonService personService;
+    private final IPersonService personService;
     private static ISerializer serializer = new Serializer();
 
-    public GetScheduledPerson() {
-        this.personService = new PersonService();
+    public GetScheduledPerson(IPersonService personService) {
+        this.personService = personService;
     }
 
     @Override

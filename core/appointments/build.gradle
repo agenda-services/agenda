@@ -52,7 +52,7 @@ functionsDir.eachFile { file ->
     println "[$taskName]: task created"
 
     tasks.create(name: taskName,type: ShadowJar) {
-        archiveBaseName.set(file.name.toLowerCase())
+        archiveBaseName.set(fileName.toLowerCase())
         archiveClassifier.set('')
         archiveVersion.set('')
         from sourceSets.main.output
@@ -63,6 +63,14 @@ functionsDir.eachFile { file ->
                     'Main-Class': "com.agenda.appointments.functions.${fileName}"
             )
         }
+
+        minimize()
+
+        dependencies {
+            include(dependency("software.amazon.awssdk:*"))
+        }
+
+        mergeServiceFiles()
     }
 
     artifacts {
