@@ -1,24 +1,18 @@
 import { Person } from "../models/person";
 import peopleRepository from "../repositories/peopleRepository";
 
-const getScheduledPeople = () => {
-  return peopleRepository.getPeople();
+const getScheduledPeople = async (): Promise<Person[]> => {
+  return await peopleRepository.getPeople();
 };
 
-const getScheduledPersonById = (personId: string) => {
-  return peopleRepository.getPersonById(personId);
+const getScheduledPersonById = async (personId: string) => {
+  return await peopleRepository.getPersonById(personId);
 };
 
-const createPerson = (person: Partial<Person>): Person => {
-  const personId = "";
+const createPerson = async (person: Partial<Person>): Promise<Person> => {
+  const personToCreate = person as Person;
 
-  const personCreated = person as Person;
-
-  personCreated.person_id = personId;
-  personCreated.created_at = new Date().toLocaleDateString();
-  personCreated.updated_at = new Date().toLocaleDateString();
-
-  peopleRepository.savePerson(personCreated);
+  const personCreated = await peopleRepository.savePerson(personToCreate);
 
   return personCreated;
 };

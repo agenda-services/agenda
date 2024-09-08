@@ -3,15 +3,22 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
 
+import { connect } from "repositories/connectMongo";
+
 import { peopleRouter } from "./routes/peopleRouter";
 import { appointmentsRouter } from "./routes/appointmentsRouter";
 
 dotenv.config();
 
+connect()
+  .then(() => console.info("Connect to DB successful"))
+  .catch(console.error);
+
 export const app: Express = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms")
 );
@@ -36,7 +43,7 @@ const routes: Route[] = [
 routes.forEach((r) => {
   const route = `/api/${API_V1}/${r.path}/`;
   app.use(route, r.router);
-  console.log("Route registered:", route);
+  console.info("Route registered:", route);
 });
 
 app.use((_, res, next) => {

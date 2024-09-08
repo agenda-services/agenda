@@ -3,33 +3,27 @@ import { Appointment } from "./../models/appointment";
 import { Person } from "../models/person";
 import personService from "../services/peopleService";
 
-const getAppointments = () => {
-  return appointmentsRepository
-    .getAppointments()
-    .map((appointment: Appointment) => ({
-      ...appointment,
-      client: personService.getScheduledPersonById(appointment.person_id)
-    }));
+const getAppointments = async () => {
+  return await appointmentsRepository.getAppointments();
 };
 
-const createAppointment = (
+const createAppointment = async (
   person: Partial<Person>,
   appointment: Partial<Appointment>
-): Appointment => {
-  const appointmentId = "";
+): Promise<{ appointmentCreated: Appointment; personCreated: Person }> => {
+  let personCreated = person as Person;
 
-  const personCreated = personService.createPerson(person);
+  if (!person._id) {
+    personCreated = await personService.createPerson(person);
+  }
+
   const appointmentCreated = appointment as Appointment;
 
-  appointmentCreated.appointment_id = appointmentId;
-  appointmentCreated.person_id = personCreated.person_id;
-
-  appointmentCreated.created_at = new Date().toLocaleDateString();
-  appointmentCreated.updated_at = new Date().toLocaleDateString();
+  appointmentCreated.person_id = personCreated._id;
 
   appointmentsRepository.saveAppointment(appointmentCreated);
 
-  return appointmentCreated;
+  return { appointmentCreated, personCreated };
 };
 
 export default {

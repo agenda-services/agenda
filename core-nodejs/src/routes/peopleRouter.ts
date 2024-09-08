@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getScheduledPerson } from "../controllers/peopleController";
+import { getScheduledPerson } from "../controllers/people/peopleController";
 
 export const peopleRouter = Router();
 
