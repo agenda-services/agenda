@@ -17,11 +17,13 @@ const createAppointment = async (
     personCreated = await personService.createPerson(person);
   }
 
-  const appointmentCreated = appointment as Appointment;
+  const appointmentToCreate = appointment as Appointment;
 
-  appointmentCreated.person_id = personCreated._id;
+  appointmentToCreate.person_id = personCreated._id;
 
-  appointmentsRepository.saveAppointment(appointmentCreated);
+  const appointmentCreated = await appointmentsRepository.saveAppointment(
+    appointmentToCreate
+  );
 
   return { appointmentCreated, personCreated };
 };

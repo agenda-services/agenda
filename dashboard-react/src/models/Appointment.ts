@@ -1,0 +1,17 @@
+import { Person } from "./Person";
+
+export enum AppointmentStatus {
+  Active = "active",
+  Cancelled = "cancelled",
+  Done = "done"
+}
+
+export interface Appointment {
+  id: string;
+  date: Date;
+  service_id: string;
+  status: AppointmentStatus;
+  person: Person;
+  created_at: Date;
+  updated_at: Date;
+}
