@@ -2,7 +2,10 @@ import { generateAppointmentId } from "@/shared/generator";
 import { Appointment, AppointmentStatus } from "../models/appointment";
 
 const getAppointments = async (): Promise<Appointment[]> => {
-  return await Appointment.find({});
+  return (await Appointment.find({})
+    .sort({ date: -1 })
+    .limit(10)
+    .lean()) as Appointment[];
 };
 
 const saveAppointment = async (data: Appointment): Promise<Appointment> => {
@@ -11,9 +14,6 @@ const saveAppointment = async (data: Appointment): Promise<Appointment> => {
   appointmentToSave._id = generateAppointmentId();
 
   appointmentToSave.status = AppointmentStatus.Active;
-
-  appointmentToSave.created_at = new Date();
-  appointmentToSave.updated_at = new Date();
 
   await appointmentToSave.save();
 
