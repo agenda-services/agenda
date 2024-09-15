@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
 export const appointmentSchema = new mongoose.Schema({
-  _id: String,
-  person_id: String,
+  _id: { type: String, required: true },
+  person_id: { type: String, required: true },
   date: Date,
-  status: String,
-  service_id: String,
-  created_at: Date,
-  updated_at: Date
+  status: { type: String, required: true },
+  service_id: { type: String, required: false },
+  created_at: { type: Date, default: Date.now },
+  updated_at: { type: Date, default: Date.now }
 });
 
 appointmentSchema.set("toObject", {
