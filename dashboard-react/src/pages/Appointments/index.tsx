@@ -8,39 +8,42 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export const Appointments = () => {
-  const { data, loading, error, getAppointmentsList } = useAppointments();
-  const nameInput = useRef(null);
+  const { appointments, loading, error, getAppointmentsList } =
+    useAppointments();
+  const nameInput = useRef<HTMLInputElement | null>(null);
   const [isOpenForm, setIsOpenForm] = React.useState(false);
+  const [appointmentSelected, setAppointmentSelected] = React.useState("");
+
+  const nameInputValue = nameInput.current?.value || "";
+
+  const reprogram = (appointmentId: string) => {
+    setAppointmentSelected(appointmentId);
+    setIsOpenForm(true);
+  };
+
+  const closeForm = () => {
+    setIsOpenForm(false);
+    setAppointmentSelected("");
+  };
 
   if (isOpenForm) {
     return (
       <section className="w-full flex flex-col gap-2 items-start">
         <button
           type="button"
-          onClick={() => setIsOpenForm(false)}
+          onClick={closeForm}
           className="w-[25px] h-[25px] grid place-content-center mb-4"
         >
           <FontAwesomeIcon icon={faArrowLeft} />
         </button>
         <AppointmentForm
-          closeForm={() => setIsOpenForm(false)}
+          closeForm={closeForm}
           getAppointments={getAppointmentsList}
-          defaultFirstName={(nameInput.current?.value as string) || ""}
+          defaultFirstName={nameInputValue}
+          appointmentSelected={appointmentSelected}
         />
       </section>
     );
-  }
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
-
-  if (!data) {
-    return <p>No hay appointments</p>;
   }
 
   return (
@@ -58,10 +61,38 @@ export const Appointments = () => {
           Send
         </button>
       </form>
-      <ul className="w-full flex flex-col gap-4">
-        {(data as Appointment[]).map((appointment) => (
-          <li key={appointment.id}>
-            <AppointmentCard appointment={appointment} />
+
+      {loading &&
+        [1, 2].map(() => (
+          <div className="animate-pulse border rounded-md p-4 border-gray-400">
+            <div className="flex justify-between">
+              <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-400 w-48 mb-4"></div>
+              <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-400 w-48 mb-4"></div>
+            </div>
+            <div className="flex justify-between">
+              <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-400 w-60 mb-4"></div>
+              <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-400 w-40 mb-4"></div>
+            </div>
+            <span className="sr-only">Loading...</span>
+          </div>
+        ))}
+
+      {error && (
+        <p className="font-bold text-red-400 bg-red-100 p-4 rounded-md">
+          {error}
+        </p>
+      )}
+
+      <ul className="w-full flex flex-col gap-4 overflow-x-hidden">
+        {appointments?.length === 0 ||
+          (!appointments && !loading && <p>No hay appointments</p>)}
+        {(appointments as Appointment[] | null)?.map((appointment) => (
+          <li
+            key={appointment.id}
+            id={appointment.id}
+            className="flex transition-all duration-[0.5s] ease-in-out"
+          >
+            <AppointmentCard appointment={appointment} reprogram={reprogram} />
           </li>
         ))}
       </ul>

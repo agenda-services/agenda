@@ -1,14 +1,14 @@
 import express, { Express, Request, Response, Router } from "express";
-import dotenv from "dotenv";
+import dotenvx from "@dotenvx/dotenvx";
 import morgan from "morgan";
 import cors from "cors";
 
-import { connect } from "repositories/connectMongo";
+import { connect } from "./repositories/connectMongo";
 
 import { peopleRouter } from "./routes/peopleRouter";
 import { appointmentsRouter } from "./routes/appointmentsRouter";
 
-dotenv.config();
+dotenvx.config();
 
 connect()
   .then(() => console.info("Connect to DB successful"))

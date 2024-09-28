@@ -1,4 +1,4 @@
-import { PrefixId } from "@/models/prefixId";
+import { PrefixId } from "../models/prefixId";
 import { v4 as uuidv4 } from "uuid";
 
 const getId = (prefix: PrefixId) => {

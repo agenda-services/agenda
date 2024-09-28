@@ -7,6 +7,10 @@ const getAppointments = async () => {
   return await appointmentsRepository.getAppointments();
 };
 
+const getAppointment = async (appointmentId: string) => {
+  return await appointmentsRepository.getAppointment(appointmentId);
+};
+
 const createAppointment = async (
   person: Partial<Person>,
   appointment: Partial<Appointment>
@@ -28,7 +32,13 @@ const createAppointment = async (
   return { appointmentCreated, personCreated };
 };
 
+const updateAppointment = async (appointment: Appointment) => {
+  return await appointmentsRepository.updateAppointment(appointment);
+};
+
 export default {
   getAppointments,
-  createAppointment
+  getAppointment,
+  createAppointment,
+  updateAppointment
 };

@@ -2,7 +2,7 @@ import { Person } from "./Person";
 
 export enum AppointmentStatus {
   Active = "active",
-  Cancelled = "cancelled",
+  Canceled = "canceled",
   Done = "done"
 }
 
