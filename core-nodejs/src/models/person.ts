@@ -1,4 +1,4 @@
-import { personSchema } from "@/schemas/people";
+import { personSchema } from "../schemas/people";
 import mongoose from "mongoose";
 
 export interface Person {

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import appointmentsService from "../../services/appointmentsService";
 import peopleService from "../../services/peopleService";
-import { appointmentToResponse } from "@/models/appointment";
+import { appointmentToResponse } from "../../models/appointment";
 
 export default async (req: Request, res: Response) => {
   const appointments = await appointmentsService.getAppointments();

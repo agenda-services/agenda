@@ -6,13 +6,13 @@ export const MainLayout: React.FunctionComponent<React.PropsWithChildren> = ({
 }) => {
   return (
     <>
-      <header className="p-4 shadow-md z-10">
-        <nav className="flex justify-between items-center max-w-[700px] m-auto">
+      <header className="flex py-4 shadow-md z-10 min-w-[250px]">
+        <nav className="flex w-full justify-between items-center max-w-[700px] min-w-[250px] m-auto px-5">
           <FontAwesomeIcon icon={faBars} />
           <h2>Angy Gonzaléz</h2>
         </nav>
       </header>
-      <main className="flex min-h-[100vh] w-full max-w-[700px] m-auto p-5 text-wrap">
+      <main className="flex min-h-[100vh] w-full max-w-[700px] min-w-[250px] m-auto p-5 text-wrap">
         {children}
       </main>
     </>

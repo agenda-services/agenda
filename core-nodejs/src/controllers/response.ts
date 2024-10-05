@@ -5,6 +5,10 @@ export const responseBadRequest = (res: Response, message: string) => {
   res.status(StatusCodes.BAD_REQUEST).json({ message });
 };
 
+export const responseNotFound = (res: Response, message: string) => {
+  res.status(StatusCodes.BAD_REQUEST).json({ message });
+};
+
 export const responseInternalError = (res: Response) => {
   res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)

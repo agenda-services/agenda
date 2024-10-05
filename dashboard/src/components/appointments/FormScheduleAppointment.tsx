@@ -36,7 +36,6 @@ export default function FormSchedule() {
     const [hour, minutes] = time.split(":");
     actualDate.setHours(parseInt(hour));
     actualDate.setMinutes(parseInt(minutes));
-    console.log(hour, minutes);
 
     const appointment: Partial<Appointment> = {
       client: {

@@ -4,7 +4,7 @@ import { Person, PersonResponse, personToResponse } from "./person";
 
 export enum AppointmentStatus {
   Active = "active",
-  Cancelled = "cancelled",
+  Canceled = "canceled",
   Done = "done"
 }
 
