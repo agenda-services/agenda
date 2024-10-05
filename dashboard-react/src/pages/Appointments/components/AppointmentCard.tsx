@@ -63,7 +63,7 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
   const isCurrentDate =
     now.getFullYear() === appointment.date.getFullYear() &&
     now.getMonth() === appointment.date.getMonth() &&
-    now.getDay() === appointment.date.getDay();
+    now.getDate() === appointment.date.getDate();
 
   const isNextDate =
     now.getTime() < appointment.date.getTime() && !isCurrentDate;
