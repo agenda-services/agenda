@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faSun } from "@fortawesome/free-regular-svg-icons";
 import { formatDate } from "../../../utils/dates";
-import { useUpdateAppointment } from "../../../shared/hooks/appointments";
+import { useUpdateAppointment } from "../../../hooks/appointments";
 
 interface AppointmentCardProps {
   appointment: Appointment;
@@ -70,8 +70,8 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
   const isOldDate =
     now.getTime() > appointment.date.getTime() && !isCurrentDate;
 
-  const nextDatesClass = "bg-green-400 opacity-60 border-green-400";
-  const oldDatesClass = "bg-yellow-300 border-yellow-300";
+  const nextDatesClass = "opacity-60 border-green-400";
+  const oldDatesClass = "border-yellow-300";
 
   const getIcon = (): IconDefinition => {
     if (isOldDate) {
