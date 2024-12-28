@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,jsx,tsx,ts}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Poppins", "serif"]
+      },
       keyframes: {
         "slide-right": {
           "0%": { transform: "translateX(0)" },

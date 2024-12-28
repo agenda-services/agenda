@@ -1,56 +1,22 @@
 import React, { useCallback, useState, type Key } from "react";
 import { Appointment, AppointmentStatus } from "../../../models/Appointment";
 import { cn } from "../../../utils/tailwindCss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { formatDate, formatHour } from "../../../utils/dates";
+import { useUpdateAppointment } from "../../../hooks/appointments";
+import { ActionsCard } from "./ActionsCard";
 import {
-  faCalendarCheck,
   faCalendarDay,
-  faCalendarXmark,
-  faClockRotateLeft,
+  faSun,
   faTriangleExclamation,
   IconDefinition
 } from "@fortawesome/free-solid-svg-icons";
-import { faSun } from "@fortawesome/free-regular-svg-icons";
-import { formatDate } from "../../../utils/dates";
-import { useUpdateAppointment } from "../../../hooks/appointments";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface AppointmentCardProps {
   appointment: Appointment;
   key?: Key | null | undefined;
   reprogram: (appointmentId: string) => void;
 }
-
-interface ActionsProps {
-  reprogram: () => void;
-  cancel: () => void;
-  done: () => void;
-}
-
-const Actions: React.FunctionComponent<ActionsProps> = ({
-  reprogram,
-  cancel,
-  done
-}) => {
-  const buttonClass = "flex flex-col gap-1 items-center justify-center";
-  const iconClass = "w-[16px] h-[16px]";
-
-  return (
-    <div className="flex gap-2 text-[10px] items-center justify-self-end">
-      <button className={buttonClass} onClick={reprogram}>
-        <FontAwesomeIcon className={iconClass} icon={faClockRotateLeft} />
-        <span>Reprogramar</span>
-      </button>
-      <button className={buttonClass} onClick={cancel}>
-        <FontAwesomeIcon className={iconClass} icon={faCalendarXmark} />
-        <span>Cancelar</span>
-      </button>
-      <button className={buttonClass} onClick={done}>
-        <FontAwesomeIcon className={iconClass} icon={faCalendarCheck} />
-        <span>Completar</span>
-      </button>
-    </div>
-  );
-};
 
 export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
   appointment,
@@ -132,7 +98,7 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
   return (
     <article
       className={cn(
-        "transition-all duration-[0.5s] ease-in-out grid grid-rows-2 grid-cols-[25px_1fr_1fr] items-center justify-items-center gap-4 w-full px-4 py-2 border border-gray-400 rounded-md",
+        "transition-all duration-[0.5s] ease-in-out grid grid-rows-2 grid-cols-[.8fr_1fr_1fr] items-center justify-items-center gap-4 w-full px-4 py-2 border border-gray-400 rounded-md",
         isNextDate ? nextDatesClass : "",
         isOldDate ? oldDatesClass : "",
         loadingUpdate ? "opacity-30" : "",
@@ -140,19 +106,23 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
         action === AppointmentStatus.Canceled ? "bg-red-400" : ""
       )}
     >
-      <FontAwesomeIcon icon={getIcon()} />
-      <span className="text-left w-full text-sm capitalize truncate">
+      {/* <FontAwesomeIcon icon={getIcon()} /> */}
+      <span className="justify-self-start font-semibold text-xs">
+        {formatHour(appointment.date)}
+      </span>
+      <span className="text-left w-full capitalize truncate">
         {appointment.person.firstname} {appointment.person.lastname}
       </span>
-      <small className="w-full capitalize break-words text-[10px] text-end">
+      <small className="w-full capitalize break-words text-[10px] text-end text-xs">
         {formatDate(appointment.date)}
       </small>
 
       <div className="w-full grid grid-cols-[25px_1fr_1fr] gap-2 col-span-3 items-center">
-        <p className="flex flex-col gap-1 text-sm col-span-2">
+        <p className="flex items-center gap-3 text-xs col-span-2 font-semibold">
+          <FontAwesomeIcon icon={getIcon()} />
           <span>{getLabelToDays()}</span>
         </p>
-        <Actions
+        <ActionsCard
           reprogram={() => reprogram(appointment.id)}
           cancel={async () => {
             try {
