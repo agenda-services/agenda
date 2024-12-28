@@ -58,7 +58,11 @@ export const Appointments = () => {
           className="px-4 py-2 top-0"
           placeholder="Agendar cita a..."
         />
-        <Button className="h-full" type="submit" icon={faArrowRight} />
+        <Button
+          className="h-full bg-primary-200 text-primary-600"
+          type="submit"
+          icon={faArrowRight}
+        />
       </form>
 
       {loading &&

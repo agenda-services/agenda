@@ -1,13 +1,21 @@
 import { useState, useEffect, useCallback } from "react";
 import {
-  createAppointmentService,
   getAppointments,
-  getAppointmentById as getAppointmentByIdService,
-  updateAppointement as updateAppointementService
+  getAppointmentById as getAppointmentByIdService
 } from "../services/appointments/getAppointments";
 import { Appointment, CreateAppointment } from "../models/Appointment";
+import { updateAppointementService } from "./../services/appointments/updateAppointment";
+import { createAppointmentService } from "./../services/appointments/createAppointment";
 
-export const useAppointments = (appointmentId?: string) => {
+interface useAppointmentsProps {
+  useAppointmentsRequest?: boolean;
+  appointmentId?: string;
+}
+
+export const useAppointments = ({
+  useAppointmentsRequest = true,
+  appointmentId
+}: useAppointmentsProps = {}) => {
   const [appointments, setAppointments] = useState<Appointment[] | null>(null);
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [loading, setLoading] = useState(false);
@@ -44,8 +52,12 @@ export const useAppointments = (appointmentId?: string) => {
   };
 
   useEffect(() => {
+    if (!useAppointmentsRequest) {
+      return;
+    }
+
     getAppointmentsList();
-  }, [getAppointmentsList]);
+  }, [useAppointmentsRequest, getAppointmentsList]);
 
   useEffect(() => {
     if (!appointmentId) return;
@@ -107,7 +119,6 @@ export const useUpdateAppointment = () => {
     } catch (e) {
       const error = e as Error;
       setError(error.message);
-      throw error;
     } finally {
       setLoading(false);
     }
