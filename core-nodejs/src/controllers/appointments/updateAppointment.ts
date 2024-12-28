@@ -9,9 +9,9 @@ import { responseBadRequest, responseNotFound } from "../response";
 
 export default async (req: Request, res: Response) => {
   const { id } = req.params;
-  const { status } = req.body;
+  const { status, date } = req.body;
 
-  if (!Object.values(AppointmentStatus).includes(status)) {
+  if (status !== "" && !Object.values(AppointmentStatus).includes(status)) {
     return responseBadRequest(res, "invalid appointment status");
   }
 
@@ -21,7 +21,13 @@ export default async (req: Request, res: Response) => {
     return responseNotFound(res, "appointment not found");
   }
 
-  appointment.status = status;
+  if (status) {
+    appointment.status = status;
+  }
+
+  if (date) {
+    appointment.date = date;
+  }
 
   const appointmentUpdated = await appointmentsService.updateAppointment(
     appointment
