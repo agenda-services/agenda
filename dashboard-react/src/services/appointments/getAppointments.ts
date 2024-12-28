@@ -20,6 +20,7 @@ export const updateAppointement = async (
   };
 
   const response = await fetch(APPOINTMENTS_URL + id, req);
+  console.log(response);
   const data = await response.json();
 
   if (!response.ok) {

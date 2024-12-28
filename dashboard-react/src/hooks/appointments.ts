@@ -4,8 +4,8 @@ import {
   getAppointments,
   getAppointmentById as getAppointmentByIdService,
   updateAppointement as updateAppointementService
-} from "../../services/appointments/getAppointments";
-import { Appointment, CreateAppointment } from "../../models/Appointment";
+} from "../services/appointments/getAppointments";
+import { Appointment, CreateAppointment } from "../models/Appointment";
 
 export const useAppointments = (appointmentId?: string) => {
   const [appointments, setAppointments] = useState<Appointment[] | null>(null);

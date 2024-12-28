@@ -1,11 +1,18 @@
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Input } from "./Input";
-import { useAppointments, useCreateAppointment } from "../hooks/appointments";
-import { CreateAppointment } from "../../models/Appointment";
+import { Input } from "../../../components/Input";
+import {
+  useAppointments,
+  useCreateAppointment
+} from "../../../hooks/appointments";
+import { CreateAppointment } from "../../../models/Appointment";
 import { PropsWithChildren, useEffect } from "react";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
-import { cn } from "../../utils/tailwindCss";
+import { cn, Color } from "../../../utils/tailwindCss";
+import { Button } from "../../../components/Button";
+import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
+import { faClose } from "@fortawesome/free-solid-svg-icons/faClose";
+import { Select } from "../../../components/Select";
 
 type FormValues = {
   firstname: string;
@@ -15,6 +22,7 @@ type FormValues = {
   date: string;
   hour: number;
   minutes: number;
+  time: string;
 };
 
 const formSchema = Joi.object({
@@ -29,10 +37,13 @@ const formSchema = Joi.object({
     .required()
     .messages({
       "string.empty": "La fecha es necesaria",
-      "string.pattern.base": "Esta no es una fecha valida (año/mes/día)"
+      "string.pattern.base": "Esta no es una fecha valida (día/mes/año)"
     }),
-  hour: Joi.number().integer().min(0).max(12),
-  minutes: Joi.number().integer().min(0).max(59)
+  hour: Joi.number().integer().min(0).max(12).messages({
+    "number.max": "La hora no puede ser mayor a 12"
+  }),
+  minutes: Joi.number().integer().min(0).max(59),
+  time: Joi.string()
 });
 
 interface AppointmentFormProps {
@@ -99,6 +110,10 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
     };
 
     if (data.hour) {
+      if (data.time === "p.m.") {
+        data.hour += 12;
+      }
+
       dataAppointment.date.setHours(data.hour);
     }
 
@@ -197,40 +212,52 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
           </label>
           <label htmlFor="" className={inputClassName}>
             Hora
-            <fieldset className="grid grid-cols-[80px_80px] gap-1">
+            <fieldset className="flex gap-1 items-center bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg w-full p-[3.5px] px-2 max-h-[50px] max-w-[200px]">
               <Input
                 defaultValue={
                   appointment?.date ? appointment.date.getHours() : 0
                 }
-                className="max-w-[60px]"
+                type="number"
+                max={2}
+                hasEmptyStyle
+                className="w-full px-1 rounded-sm"
                 formRegister={register("hour")}
                 hasError={!!errors.hour}
                 disabled={loading}
               />
+              :
               <Input
                 defaultValue={
                   appointment?.date ? appointment.date.getMinutes() : 0
                 }
-                className="max-w-[60px]"
+                type="number"
+                max={2}
+                hasEmptyStyle
+                className="w-full px-1 rounded-sm"
                 formRegister={register("minutes")}
                 hasError={!!errors.minutes}
                 disabled={loading}
               />
-              {errors.hour && (
-                <ErrorHint className="max-w-[60px]">
-                  {errors.hour.message}
-                </ErrorHint>
-              )}
-              {errors.minutes && (
-                <ErrorHint className="max-w-[60px]">
-                  {errors.minutes.message}
-                </ErrorHint>
-              )}
+              <Select
+                formRegister={register("time")}
+                options={["a.m.", "p.m."]}
+              />
             </fieldset>
+            <div>
+              {errors.hour && <ErrorHint>{errors.hour.message}</ErrorHint>}
+              {errors.minutes && (
+                <ErrorHint>{errors.minutes.message}</ErrorHint>
+              )}
+            </div>
           </label>
         </div>
-        <div className="w-full flex justify-end my-4">
-          <button>Agendar</button>
+        <div className="w-full flex gap-4 justify-end my-4">
+          <Button color={Color.Error} icon={faClose} onClick={closeForm}>
+            Cancelar
+          </Button>
+          <Button type="submit" icon={faCheck}>
+            Agendar
+          </Button>
         </div>
       </form>
     </>

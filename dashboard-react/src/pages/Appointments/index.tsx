@@ -1,11 +1,13 @@
 import React, { useRef } from "react";
 import { Appointment } from "../../models/Appointment";
-import { AppointmentForm } from "../../shared/components/AppointmentForm";
-import { Input } from "../../shared/components/Input";
-import { useAppointments } from "../../shared/hooks/appointments";
+import { AppointmentForm } from "./components/AppointmentForm";
+import { Input } from "../../components/Input";
+import { useAppointments } from "../../hooks/appointments";
 import { AppointmentCard } from "./components/AppointmentCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { Button } from "../../components/Button";
+import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 
 export const Appointments = () => {
   const { appointments, loading, error, getAppointmentsList } =
@@ -57,14 +59,17 @@ export const Appointments = () => {
           className="px-4 py-2 top-0"
           placeholder="Agendar cita a..."
         />
-        <button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-          Send
-        </button>
+        <Button type="submit" icon={faPlus}>
+          Agendar
+        </Button>
       </form>
 
       {loading &&
-        [1, 2].map(() => (
-          <div className="animate-pulse border rounded-md p-4 border-gray-400">
+        [1, 2].map((number) => (
+          <div
+            key={number}
+            className="animate-pulse border rounded-md p-4 border-gray-400"
+          >
             <div className="flex justify-between">
               <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-400 w-48 mb-4"></div>
               <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-400 w-48 mb-4"></div>
@@ -73,7 +78,7 @@ export const Appointments = () => {
               <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-400 w-60 mb-4"></div>
               <div className="h-3 bg-gray-200 rounded-full dark:bg-gray-400 w-40 mb-4"></div>
             </div>
-            <span className="sr-only">Loading...</span>
+            <span className="sr-only">Cargando...</span>
           </div>
         ))}
 
@@ -84,8 +89,9 @@ export const Appointments = () => {
       )}
 
       <ul className="w-full flex flex-col gap-4 overflow-x-hidden">
-        {appointments?.length === 0 ||
-          (!appointments && !loading && <p>No hay appointments</p>)}
+        {(appointments?.length === 0 || (!appointments && !loading)) && (
+          <p>No hay appointments</p>
+        )}
         {(appointments as Appointment[] | null)?.map((appointment) => (
           <li
             key={appointment.id}
