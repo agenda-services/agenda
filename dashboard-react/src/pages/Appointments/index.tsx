@@ -5,9 +5,8 @@ import { Input } from "../../components/Input";
 import { useAppointments } from "../../hooks/appointments";
 import { AppointmentCard } from "./components/AppointmentCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../../components/Button";
-import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 
 export const Appointments = () => {
   const { appointments, loading, error, getAppointmentsList } =
@@ -59,13 +58,15 @@ export const Appointments = () => {
           className="px-4 py-2 top-0"
           placeholder="Agendar cita a..."
         />
-        <Button type="submit" icon={faPlus}>
-          Agendar
-        </Button>
+        <Button
+          className="h-full bg-primary-200 text-primary-600"
+          type="submit"
+          icon={faArrowRight}
+        />
       </form>
 
       {loading &&
-        [1, 2].map((number) => (
+        Array(2).map((number) => (
           <div
             key={number}
             className="animate-pulse border rounded-md p-4 border-gray-400"

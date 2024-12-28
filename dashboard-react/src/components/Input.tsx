@@ -8,7 +8,7 @@ interface InputProps {
   key?: Key | null;
   placeholder?: string;
   type?: React.HTMLInputTypeAttribute;
-  defaultValue?: string | number | readonly string[];
+  defaultValue?: string | number | readonly string[] | undefined;
   _ref?: LegacyRef<HTMLInputElement>;
   hasError?: boolean;
   disabled?: boolean;
@@ -36,7 +36,7 @@ export const Input: React.FunctionComponent<InputProps> = ({
   disabled = false,
   hasEmptyStyle = false
 }) => {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(defaultValue);
 
   const handleCharLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value || "";
@@ -45,7 +45,7 @@ export const Input: React.FunctionComponent<InputProps> = ({
     }
 
     if (inputValue.length > max) {
-      e.target.value = value;
+      e.target.value = value as string;
       return;
     }
 

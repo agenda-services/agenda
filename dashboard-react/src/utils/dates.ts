@@ -1,6 +1,13 @@
 export const formatDate = (date: Date) =>
   new Intl.DateTimeFormat("es-ES", {
-    weekday: "long", // Nombre completo del día (lunes, martes, etc.)
-    day: "numeric", // Día del mes
-    month: "long" // Nombre completo del mes (enero, febrero, etc.)
+    weekday: "long",
+    day: "numeric",
+    month: "long"
+  }).format(date);
+
+export const formatHour = (date: Date) =>
+  new Intl.DateTimeFormat("es-ES", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true
   }).format(date);
