@@ -29,6 +29,7 @@ export const updateAppointment = async (
 ): Promise<Appointment> => {
   await Appointment.findByIdAndUpdate(appointment._id, {
     status: appointment.status,
+    date: appointment.date,
     updated_at: new Date()
   });
 
