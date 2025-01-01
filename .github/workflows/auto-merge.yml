@@ -29,6 +29,21 @@ jobs:
             exit 1
           fi
 
+      - name: Pass Pipeline
+        id: pass_pipeline
+        run: |
+          CHECKS=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/$REPO/pulls/$PR_NUMBER/checks")
+
+          FAILED_CHECKS=$(echo "$CHECKS" | jq '[.check_runs[] | select(.status != "success")] | length')
+
+          if [ "$FAILED_CHECKS" -gt 0 ]; then
+            echo "There are failed checks. Exiting..."
+            exit 1
+          else
+            echo "All checks passed."
+          fi
+
       - name: Auto merge PR
         if: success()
         run: |
