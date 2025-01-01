@@ -9,6 +9,7 @@ export const createAppointmentService = async (
   body.set("firstname", appointment.firstname);
   body.set("lastname", appointment.lastname);
   body.set("date", appointment.date.toISOString());
+  body.set("phone_number", appointment.phone_number);
 
   if (appointment.person_id) body.set("firstname", appointment.person_id);
 

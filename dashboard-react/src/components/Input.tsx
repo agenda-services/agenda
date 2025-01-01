@@ -14,6 +14,8 @@ interface InputProps {
   disabled?: boolean;
   hasEmptyStyle?: boolean;
   max?: number;
+  min?: number | string;
+  setTimeValue?: (value: string) => void;
 }
 
 const defaultCalss =
@@ -30,6 +32,7 @@ export const Input: React.FunctionComponent<InputProps> = ({
   placeholder,
   defaultValue,
   max,
+  min,
   _ref,
   type = "text",
   hasError = false,
@@ -64,6 +67,7 @@ export const Input: React.FunctionComponent<InputProps> = ({
         hasError ? errorClass : "",
         disabled ? disabledClass : ""
       )}
+      min={min}
       placeholder={placeholder}
       defaultValue={defaultValue}
       disabled={disabled}

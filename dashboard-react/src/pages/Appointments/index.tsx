@@ -66,7 +66,7 @@ export const Appointments = () => {
       </form>
 
       {loading &&
-        Array(2).map((number) => (
+        [1, 2].map((number) => (
           <div
             key={number}
             className="animate-pulse border rounded-md p-4 border-gray-400"
@@ -91,7 +91,7 @@ export const Appointments = () => {
 
       <ul className="w-full flex flex-col gap-4 overflow-x-hidden">
         {(appointments?.length === 0 || (!appointments && !loading)) && (
-          <p>No hay appointments</p>
+          <p>No hay citas</p>
         )}
         {(appointments as Appointment[] | null)?.map((appointment) => (
           <li
