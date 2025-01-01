@@ -7,7 +7,7 @@ export default {
         primary: "#4ADE80",
         "primary-200": "#8BF6B9",
         "primary-400": "#3AB66A",
-        "primary-600": "#2F9A57"
+        "primary-600": "#247A44"
       },
       fontFamily: {
         sans: ["Poppins", "serif"]

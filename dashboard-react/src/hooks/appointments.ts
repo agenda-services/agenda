@@ -12,6 +12,12 @@ interface useAppointmentsProps {
   appointmentId?: string;
 }
 
+const validateDate = (date?: Date) => {
+  if (date && date.getTime() < new Date().getTime()) {
+    throw new Error("invalid time");
+  }
+};
+
 export const useAppointments = ({
   useAppointmentsRequest = true,
   appointmentId
@@ -86,6 +92,8 @@ export const useCreateAppointment = () => {
     setError("");
 
     try {
+      validateDate(appointment.date);
+
       const response = await createAppointmentService(appointment);
 
       setData(response);
@@ -113,11 +121,14 @@ export const useUpdateAppointment = () => {
     setError("");
 
     try {
+      validateDate(appointment.date);
+
       const response = await updateAppointementService(id, appointment);
 
       setData(response);
     } catch (e) {
       const error = e as Error;
+      console.error(error);
       setError(error.message);
     } finally {
       setLoading(false);

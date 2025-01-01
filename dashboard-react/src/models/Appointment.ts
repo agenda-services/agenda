@@ -20,5 +20,6 @@ export interface CreateAppointment {
   firstname: string;
   lastname: string;
   date: Date;
+  phone_number: string;
   person_id?: string;
 }
