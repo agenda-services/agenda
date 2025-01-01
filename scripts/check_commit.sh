@@ -29,7 +29,7 @@ while read -r line; do
   fi
 
 
-  if [[ "$COMMIT_MESSAGE" == *"Merge pull request"* ]]; then
+  if [[ "$COMMIT_MESSAGE" == *"Merge"* ]]; then
     COMMIT_HASH=""
     COMMIT_MESSAGE=""
     continue
