@@ -22,8 +22,13 @@ export default async (req: Request, res: Response) => {
   if (!data.date) {
     return responseBadRequest(res, "missing date");
   }
+
   if (!isADate(data.date)) {
     return responseBadRequest(res, "wrong date format");
+  }
+
+  if (data.phone_number && !data.phone_number.includes(":")) {
+    return responseBadRequest(res, "invalid phone number");
   }
 
   let person: Partial<Person> | null = {

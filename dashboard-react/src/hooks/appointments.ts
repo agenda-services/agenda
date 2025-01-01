@@ -13,7 +13,7 @@ interface useAppointmentsProps {
 }
 
 const validateDate = (date?: Date) => {
-  if (!date || date.getTime() < new Date().getTime()) {
+  if (date && date.getTime() < new Date().getTime()) {
     throw new Error("invalid time");
   }
 };
@@ -128,6 +128,7 @@ export const useUpdateAppointment = () => {
       setData(response);
     } catch (e) {
       const error = e as Error;
+      console.error(error);
       setError(error.message);
     } finally {
       setLoading(false);
