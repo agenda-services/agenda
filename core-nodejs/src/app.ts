@@ -2,11 +2,15 @@ import express, { Express, Request, Response, Router } from "express";
 import dotenvx from "@dotenvx/dotenvx";
 import morgan from "morgan";
 import cors from "cors";
-
+import cookieParser from "cookie-parser";
 import { connect } from "./repositories/connectMongo";
 
 import { peopleRouter } from "./routes/peopleRouter";
 import { appointmentsRouter } from "./routes/appointmentsRouter";
+import { accountsRouter } from "./routes/accountsRouter";
+import { checkAuthorization } from "./middlewares/auth";
+import { limiter } from "./middlewares/limiter";
+import { COOKIE_SECRET } from "./shared/constants";
 
 dotenvx.config();
 
@@ -17,6 +21,8 @@ connect()
 export const app: Express = express();
 
 app.use(cors());
+// @ts-ignore
+app.use(cookieParser(COOKIE_SECRET));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -27,21 +33,35 @@ const API_V1 = "v1";
 interface Route {
   path: string;
   router: Router;
+  requireAuth?: boolean;
 }
 
 const routes: Route[] = [
   {
     path: "people",
-    router: peopleRouter
+    router: peopleRouter,
+    requireAuth: true
   },
   {
     path: "appointments",
-    router: appointmentsRouter
+    router: appointmentsRouter,
+    requireAuth: true
+  },
+  {
+    path: "accounts",
+    router: accountsRouter
   }
 ];
 
 routes.forEach((r) => {
   const route = `/api/${API_V1}/${r.path}/`;
+
+  r.router.use(limiter);
+
+  if (r.requireAuth) {
+    r.router.use(checkAuthorization);
+  }
+
   app.use(route, r.router);
   console.info("Route registered:", route);
 });

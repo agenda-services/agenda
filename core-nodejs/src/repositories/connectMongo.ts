@@ -1,5 +1,6 @@
+import { MONGO_URI } from "../shared/constants";
 import mongoose from "mongoose";
 
 export const connect = async () => {
-  await mongoose.connect(process.env.MONGO_URI || "");
+  await mongoose.connect(MONGO_URI);
 };

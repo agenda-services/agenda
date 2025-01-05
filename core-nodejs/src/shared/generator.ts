@@ -8,3 +8,4 @@ const getId = (prefix: PrefixId) => {
 
 export const generatePersonId = () => getId(PrefixId.PersonId);
 export const generateAppointmentId = () => getId(PrefixId.AppointmentId);
+export const generateAccountId = () => getId(PrefixId.AccountId);

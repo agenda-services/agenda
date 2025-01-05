@@ -14,3 +14,15 @@ export const responseInternalError = (res: Response) => {
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
     .json({ message: "something wrong, please try again" });
 };
+
+export const responseUnauthorized = (res: Response) => {
+  res.status(StatusCodes.UNAUTHORIZED).json({
+    message: "Access denied. You are not authorized to access this resource."
+  });
+};
+
+export const responseForbidden = (res: Response) => {
+  res.status(StatusCodes.FORBIDDEN).json({
+    message: "Invalid api key"
+  });
+};
