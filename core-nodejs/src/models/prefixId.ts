@@ -1,4 +1,5 @@
 export enum PrefixId {
   PersonId = "PID",
-  AppointmentId = "AID"
+  AppointmentId = "AID",
+  AccountId = "ACD"
 }
