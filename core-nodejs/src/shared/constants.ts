@@ -10,3 +10,5 @@ export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "";
 export const GOOGLE_REDIRECT_URI =
   "http://localhost:3000/api/v1/accounts/auth/google/callback";
 export const COOKIE_SECRET = process.env.COOKIE_SECRET || "";
+export const HOME_DASHBOARD =
+  process.env.HOME_DASHBOARD || "http://localhost:5173/";

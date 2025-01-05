@@ -1,9 +1,9 @@
-import { StatusCodes } from "http-status-codes";
 import {
   AGENDA_API_KEY,
   AGENDA_REFRESH_API_KEY,
   GOOGLE_CLIENT_ID,
-  GOOGLE_REDIRECT_URI
+  GOOGLE_REDIRECT_URI,
+  HOME_DASHBOARD
 } from "../../shared/constants";
 import { Request, Response } from "express";
 import { responseInternalError } from "../response";
@@ -49,7 +49,7 @@ export const callback = async (req: Request, res: Response) => {
       sameSite: "strict"
     });
 
-    return res.status(StatusCodes.OK).json(response);
+    res.redirect(HOME_DASHBOARD);
   } catch (error) {
     if (error == errAccountNotFound) {
       req.body.email = email;
