@@ -1,8 +1,8 @@
 import { Person } from "../models/person";
 import peopleRepository from "../repositories/peopleRepository";
 
-const getScheduledPeople = async (): Promise<Person[]> => {
-  return await peopleRepository.getPeople();
+const getScheduledPeople = async (accountId: string): Promise<Person[]> => {
+  return await peopleRepository.getPeople(accountId);
 };
 
 const getScheduledPersonById = async (personId: string) => {
@@ -10,6 +10,10 @@ const getScheduledPersonById = async (personId: string) => {
 };
 
 const createPerson = async (person: Partial<Person>): Promise<Person> => {
+  if (!person.account_id) {
+    throw Error("missing account id");
+  }
+
   const personToCreate = person as Person;
 
   const personCreated = await peopleRepository.savePerson(personToCreate);

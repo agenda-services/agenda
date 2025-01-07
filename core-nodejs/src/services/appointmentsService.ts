@@ -3,12 +3,16 @@ import { Appointment } from "./../models/appointment";
 import { Person } from "../models/person";
 import personService from "../services/peopleService";
 
-const getAppointments = async () => {
-  return await appointmentsRepository.getAppointments();
+const errMissingAccountId = Error("missing account id");
+
+const getAppointments = async (accountId: string) => {
+  if (!accountId) throw errMissingAccountId;
+
+  return await appointmentsRepository.getAppointments(accountId);
 };
 
-const getAppointment = async (appointmentId: string) => {
-  return await appointmentsRepository.getAppointment(appointmentId);
+const getAppointment = async (appointmentId: string, accountId: string) => {
+  return await appointmentsRepository.getAppointment(appointmentId, accountId);
 };
 
 const createAppointment = async (

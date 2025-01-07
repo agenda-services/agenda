@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 export const personSchema = new mongoose.Schema({
   _id: String,
+  account_id: String,
   firstname: String,
   lastname: String,
   phone_number: String,

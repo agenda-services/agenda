@@ -24,7 +24,10 @@ export default async (req: Request, res: Response) => {
   }
 
   if (!isADate(data.date)) {
-    return responseBadRequest(res, "wrong date format");
+    return responseBadRequest(
+      res,
+      "wrong date format, example 2025-01-07T14:30:00Z"
+    );
   }
 
   if (data.phone_number && !data.phone_number.includes(":")) {
@@ -50,6 +53,11 @@ export default async (req: Request, res: Response) => {
   };
 
   try {
+    const { id } = (req as Record<string, any>).account;
+
+    appointment.account_id = id;
+    person.account_id = id;
+
     const { appointmentCreated, personCreated } =
       await appointmentsService.createAppointment(person, appointment);
 

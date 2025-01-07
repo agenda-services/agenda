@@ -23,15 +23,15 @@ export const checkAuthorization = async (
   }
 
   try {
-    const additionalData = req as Record<string, any>;
-
-    additionalData.account = getClaims(token);
-    if (additionalData.account.is_refresh_token) {
+    (req as Record<string, any>).account = getClaims(token);
+    if ((req as Record<string, any>).account.is_refresh_token) {
       responseForbidden(res);
       return;
     }
 
-    const account = await getAccountById(additionalData.account.id);
+    const account = await getAccountById(
+      (req as Record<string, any>).account.id
+    );
     if (token !== account.access_token) {
       responseForbidden(res);
       return;

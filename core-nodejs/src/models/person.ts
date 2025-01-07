@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 export interface Person {
   _id: string;
+  account_id: string;
   firstname: string;
   lastname: string;
   phone_number: string;
@@ -12,6 +13,7 @@ export interface Person {
 
 export interface PersonResponse {
   id: string;
+  account_id: string;
   firstname: string;
   lastname: string;
   phone_number: string;
@@ -22,11 +24,19 @@ export interface PersonResponse {
 export const Person = mongoose.model("Person", personSchema, "people");
 
 export const personToResponse = (person: Person): PersonResponse => {
-  const { _id, firstname, lastname, phone_number, created_at, updated_at } =
-    person;
+  const {
+    _id,
+    account_id,
+    firstname,
+    lastname,
+    phone_number,
+    created_at,
+    updated_at
+  } = person;
 
   return {
     id: _id,
+    account_id,
     firstname,
     lastname,
     phone_number,

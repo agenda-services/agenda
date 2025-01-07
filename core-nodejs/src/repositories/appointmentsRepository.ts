@@ -1,15 +1,24 @@
 import { generateAppointmentId } from "../shared/generator";
 import { Appointment, AppointmentStatus } from "../models/appointment";
 
-const getAppointments = async (): Promise<Appointment[]> => {
-  return (await Appointment.find({ status: AppointmentStatus.Active })
+const getAppointments = async (account_id: string): Promise<Appointment[]> => {
+  return (await Appointment.find({
+    status: AppointmentStatus.Active,
+    account_id
+  })
     .sort({ date: -1 })
     .limit(10)
     .lean()) as Appointment[];
 };
 
-const getAppointment = async (appointmentId: string): Promise<Appointment> => {
-  return (await Appointment.findById(appointmentId).lean()) as Appointment;
+const getAppointment = async (
+  appointment_id: string,
+  account_id: string
+): Promise<Appointment> => {
+  return (await Appointment.findOne({
+    appointment_id,
+    account_id
+  }).lean()) as Appointment;
 };
 
 const saveAppointment = async (data: Appointment): Promise<Appointment> => {
