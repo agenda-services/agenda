@@ -18,11 +18,13 @@ jobs:
 
       - name: Set up environment
         run: |
-          sudo apt-get install -y && git fetch origin master
+          sudo apt-get install -y && git fetch origin master && git config --global core.autocrlf false
 
       - name: Run check commit
         run: |
-          chmod +x ./scripts/check_commit.sh && ./scripts/check_commit.sh
+          chmod +x ./scripts/check_commit.sh
+          ./scripts/check_commit.sh
       - name: Run check format
         run: |
-          chmod +x ./scripts/check_format.sh && ./scripts/check_format.sh
+          chmod +x ./scripts/check_format.sh
+          ./scripts/check_format.sh
