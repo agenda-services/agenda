@@ -19,7 +19,6 @@ export const getClaims = (token: string): Partial<JWTClaims> => {
   }
 
   const decoded = jwt.verify(token, JWT_PRIVATE_KEY) as Record<string, string>;
-
   return {
     id: decoded.id,
     email: decoded.email,

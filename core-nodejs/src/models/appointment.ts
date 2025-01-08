@@ -11,6 +11,7 @@ export enum AppointmentStatus {
 export interface Appointment {
   _id: string;
   person_id: string;
+  account_id: string;
   date: Date;
   service_id: string;
   status: AppointmentStatus;
@@ -34,10 +35,12 @@ export const appointmentToResponse = (
   appointment: Appointment,
   person: Person | null
 ): AppointmentResponse => {
-  const { _id, date, service_id, status, created_at, updated_at } = appointment;
+  const { _id, account_id, date, service_id, status, created_at, updated_at } =
+    appointment;
 
   return {
     id: _id,
+    account_id,
     date,
     service_id,
     status,

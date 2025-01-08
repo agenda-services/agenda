@@ -1,4 +1,4 @@
-import { APPOINTMENTS_URL } from ".";
+import { APPOINTMENTS_URL, fetchClient } from ".";
 import { Appointment } from "../../models/Appointment";
 
 export const updateAppointementService = async (
@@ -18,7 +18,7 @@ export const updateAppointementService = async (
     body
   };
 
-  const response = await fetch(APPOINTMENTS_URL + id, req);
+  const response = await fetchClient(APPOINTMENTS_URL + id, req);
   const data = await response.json();
 
   if (!response.ok) {

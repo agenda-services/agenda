@@ -20,10 +20,16 @@ connect()
 
 export const app: Express = express();
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:5173"]
+  })
+);
 // @ts-ignore
 app.use(cookieParser(COOKIE_SECRET));
 app.use(express.json());
+app.use(limiter);
 app.use(express.urlencoded({ extended: true }));
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms")
@@ -56,14 +62,13 @@ const routes: Route[] = [
 routes.forEach((r) => {
   const route = `/api/${API_V1}/${r.path}/`;
 
-  r.router.use(limiter);
-
   if (r.requireAuth) {
-    r.router.use(checkAuthorization);
+    app.use(route, checkAuthorization, r.router);
+  } else {
+    app.use(route, r.router);
   }
 
-  app.use(route, r.router);
-  console.info("Route registered:", route);
+  console.info("Route registered:", route, r.requireAuth ? "protected" : "");
 });
 
 app.use((_, res, next) => {

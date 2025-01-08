@@ -1,8 +1,8 @@
 import { generatePersonId } from "../shared/generator";
 import { Person } from "../models/person";
 
-const getPeople = async (): Promise<Person[]> => {
-  return await Person.find({});
+const getPeople = async (account_id: string): Promise<Person[]> => {
+  return await Person.find({ account_id });
 };
 
 const getPersonById = async (personId: string): Promise<Person | null> => {

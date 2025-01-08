@@ -1,10 +1,10 @@
-import { APPOINTMENTS_URL } from ".";
+import { APPOINTMENTS_URL, fetchClient } from ".";
 import { Appointment } from "../../models/Appointment";
 
 export const getAppointmentById = async (
   appointmentId: string
 ): Promise<Appointment> => {
-  const response = await fetch(APPOINTMENTS_URL + appointmentId);
+  const response = await fetchClient(APPOINTMENTS_URL + appointmentId);
   const data = await response.json();
 
   if (!response.ok) {
@@ -17,7 +17,7 @@ export const getAppointmentById = async (
 };
 
 export const getAppointments = async (): Promise<Appointment[]> => {
-  const response = await fetch(APPOINTMENTS_URL);
+  const response = await fetchClient(APPOINTMENTS_URL);
   const data = await response.json();
 
   if (!response.ok) {
