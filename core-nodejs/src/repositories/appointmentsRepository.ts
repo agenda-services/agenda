@@ -16,7 +16,7 @@ const getAppointment = async (
   account_id: string
 ): Promise<Appointment> => {
   return (await Appointment.findOne({
-    appointment_id,
+    _id: appointment_id,
     account_id
   }).lean()) as Appointment;
 };
