@@ -1,6 +1,7 @@
 import { UseFormRegisterReturn } from "react-hook-form";
 import { cn } from "../utils/tailwindCss";
 import { Key, LegacyRef, useState } from "react";
+import { ErrorHint } from "../pages/Appointments/components/ErrorHint";
 
 interface InputProps {
   className?: string;
@@ -10,11 +11,11 @@ interface InputProps {
   type?: React.HTMLInputTypeAttribute;
   defaultValue?: string | number | readonly string[] | undefined;
   _ref?: LegacyRef<HTMLInputElement>;
-  hasError?: boolean;
   disabled?: boolean;
   hasEmptyStyle?: boolean;
   max?: number;
   min?: number | string;
+  error?: string;
   setTimeValue?: (value: string) => void;
 }
 
@@ -35,9 +36,9 @@ export const Input: React.FunctionComponent<InputProps> = ({
   min,
   _ref,
   type = "text",
-  hasError = false,
   disabled = false,
-  hasEmptyStyle = false
+  hasEmptyStyle = false,
+  error = ""
 }) => {
   const [value, setValue] = useState(defaultValue);
 
@@ -56,22 +57,25 @@ export const Input: React.FunctionComponent<InputProps> = ({
   };
 
   return (
-    <input
-      type={type}
-      ref={_ref}
-      {...formRegister}
-      className={cn(
-        !hasEmptyStyle && defaultCalss,
-        "bg-gray-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
-        className,
-        hasError ? errorClass : "",
-        disabled ? disabledClass : ""
-      )}
-      min={min}
-      placeholder={placeholder}
-      defaultValue={defaultValue}
-      disabled={disabled}
-      onChange={handleCharLimit}
-    />
+    <>
+      <input
+        type={type}
+        ref={_ref}
+        {...formRegister}
+        className={cn(
+          !hasEmptyStyle && defaultCalss,
+          "bg-gray-50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none",
+          className,
+          error ? errorClass : "",
+          disabled ? disabledClass : ""
+        )}
+        min={min}
+        placeholder={placeholder}
+        defaultValue={defaultValue}
+        disabled={disabled}
+        onChange={handleCharLimit}
+      />
+      {error && <ErrorHint>{error}</ErrorHint>}
+    </>
   );
 };

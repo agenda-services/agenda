@@ -1,4 +1,4 @@
-import React, { useCallback, useState, type Key } from "react";
+import React, { useCallback, useMemo, useState, type Key } from "react";
 import { Appointment, AppointmentStatus } from "../../../models/Appointment";
 import { cn } from "../../../utils/tailwindCss";
 import { formatDate, formatHour } from "../../../utils/dates";
@@ -25,16 +25,24 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
   const { loading: loadingUpdate, updateAppointement } = useUpdateAppointment();
 
   const [action, setAction] = useState<AppointmentStatus>(appointment.status);
-  const now = new Date();
-  const isCurrentDate =
-    now.getFullYear() === appointment.date.getFullYear() &&
-    now.getMonth() === appointment.date.getMonth() &&
-    now.getDate() === appointment.date.getDate();
+  const now = useMemo(() => new Date(), []);
+  const isCurrentDate = useMemo(
+    () =>
+      now.getFullYear() === appointment.date.getFullYear() &&
+      now.getMonth() === appointment.date.getMonth() &&
+      now.getDate() === appointment.date.getDate(),
+    [now, appointment]
+  );
 
-  const isNextDate =
-    now.getTime() < appointment.date.getTime() && !isCurrentDate;
-  const isOldDate =
-    now.getTime() > appointment.date.getTime() && !isCurrentDate;
+  const isNextDate = useMemo(
+    () => now.getTime() < appointment.date.getTime() && !isCurrentDate,
+    [now, appointment, isCurrentDate]
+  );
+
+  const isOldDate = useMemo(
+    () => now.getTime() > appointment.date.getTime() && !isCurrentDate,
+    [now, appointment, isCurrentDate]
+  );
 
   const nextDatesClass = "opacity-60 border-green-400";
   const oldDatesClass = "border-yellow-300";
