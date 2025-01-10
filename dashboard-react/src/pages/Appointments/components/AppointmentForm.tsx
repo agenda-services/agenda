@@ -6,10 +6,10 @@ import {
   useUpdateAppointment
 } from "../../../hooks/appointments";
 import { CreateAppointment } from "../../../models/Appointment";
-import { PropsWithChildren, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { joiResolver } from "@hookform/resolvers/joi";
 import Joi from "joi";
-import { cn, Color } from "../../../utils/tailwindCss";
+import { Color } from "../../../utils/tailwindCss";
 import { Button } from "../../../components/Button";
 import { faCheck } from "@fortawesome/free-solid-svg-icons/faCheck";
 import { faClose } from "@fortawesome/free-solid-svg-icons/faClose";
@@ -55,18 +55,6 @@ interface AppointmentFormProps {
   appointmentSelected: string;
 }
 
-interface ErrorHintProps extends PropsWithChildren {
-  className?: string;
-}
-const ErrorHint: React.FunctionComponent<ErrorHintProps> = ({
-  children,
-  className
-}) => (
-  <small className={cn("text-xs text-red-400 break-words", className)}>
-    {children}
-  </small>
-);
-
 export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
   defaultFirstName,
   appointmentSelected,
@@ -104,8 +92,20 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
     updateAppointement
   } = useUpdateAppointment();
 
-  const isRequestLoading = createLoading || updateLoading || loadingAppointment;
-  const isInputDisable = isRequestLoading || !!appointment;
+  const isRequestLoading = useMemo(
+    () => createLoading || updateLoading || loadingAppointment,
+    [createLoading, updateLoading, loadingAppointment]
+  );
+
+  const isInputDisable = useMemo(
+    () => isRequestLoading || !!appointment,
+    [isRequestLoading, appointment]
+  );
+
+  const personPhoneNumber = useMemo(
+    () => appointment?.person.phone_number?.split(":")[1] || "",
+    [appointment]
+  );
 
   const inputClassName = "flex flex-col gap-2";
   const errorClassName = "p-4 bg-red-200 text-red-800 rounded-lg w-full";
@@ -149,6 +149,9 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
     });
   };
 
+  const getError = (name: keyof FormValues): string =>
+    errors[name]?.message || "";
+
   useEffect(() => {
     if (appointmentCreated?.id) {
       closeForm();
@@ -168,7 +171,7 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
       return;
     }
 
-    const dateParsed = `${appointment.date.getFullYear()}-${appointment.date.getMonth()}-${appointment.date.getDate()}`;
+    const dateParsed = appointment.date.toLocaleDateString("en-CA");
     const [country_code, number] = appointment.person.phone_number?.split(
       ":"
     ) || ["+57", ""];
@@ -189,6 +192,7 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
       {createError && <p className={errorClassName}>{createError}</p>}
       {updateError && <p className={errorClassName}>{updateError}</p>}
       {errorAppointment && <p className={errorClassName}>{errorAppointment}</p>}
+
       <form
         className="w-full flex flex-col gap-4"
         onSubmit={handleSubmit(onSubmit)}
@@ -198,41 +202,37 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
           <Input
             defaultValue={defaultFirstName}
             formRegister={{ ...register("firstname") }}
-            hasError={!!errors.firstname}
             disabled={isInputDisable}
+            error={getError("firstname")}
           />
-          {errors.firstname && (
-            <ErrorHint>{errors.firstname.message}</ErrorHint>
-          )}
         </label>
+
         <label htmlFor="" className={inputClassName}>
           Apellidos
           <Input
             formRegister={register("lastname")}
-            hasError={!!errors.lastname}
             disabled={isInputDisable}
+            error={getError("lastname")}
           />
-          {errors.lastname && <ErrorHint>{errors.lastname.message}</ErrorHint>}
         </label>
+
         <label htmlFor="" className={inputClassName}>
           Teléfono
           <fieldset className="grid grid-cols-[80px_1fr] gap-2">
             <Input
               defaultValue="+57"
               formRegister={register("country_code")}
-              hasError={!!errors.country_code}
               disabled={isInputDisable}
+              error={getError("country_code")}
             />
+
             <Input
-              defaultValue={appointment?.person.phone_number?.split(":")[1]}
+              defaultValue={personPhoneNumber}
               formRegister={register("phone_number")}
-              hasError={!!errors.phone_number}
               disabled={isInputDisable}
+              error={getError("phone_number")}
             />
           </fieldset>
-          {errors.phone_number && (
-            <ErrorHint>{errors.phone_number.message}</ErrorHint>
-          )}
         </label>
 
         <div className="flex flex-wrap gap-4">
@@ -240,41 +240,29 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
             Día
             <Input
               type="date"
-              defaultValue={
-                appointment?.date
-                  ? appointment.date.toLocaleDateString("en-CA")
-                  : now
-              }
+              defaultValue={appointment?.date.toLocaleDateString("en-CA")}
               min={now}
               className="min-w-[80px] max-w-[150px]"
               formRegister={register("date")}
-              hasError={!!errors.date}
               disabled={createLoading}
+              error={getError("date")}
             />
-            {errors.date && (
-              <ErrorHint className="min-w-[150px] max-w-[220px]">
-                {errors.date.message}
-              </ErrorHint>
-            )}
           </label>
+
           <label htmlFor="" className={inputClassName}>
             Hora
             <Input
               type="time"
               defaultValue={
-                appointment?.date
-                  ? formatHour(appointment.date, false)
-                  : formatHour(new Date(), false)
+                formatHour(appointment?.date, false) ||
+                formatHour(new Date(), false)
               }
               className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg w-full h-full p-[10px] px-2 max-w-[200px]"
               formRegister={register("hour")}
               setTimeValue={(val) => setValue("hour", val)}
-              hasError={!!errors.hour}
               disabled={createLoading}
+              error={getError("hour")}
             />
-            <div>
-              {errors.hour && <ErrorHint>{errors.hour.message}</ErrorHint>}
-            </div>
           </label>
         </div>
         <div className="w-full flex gap-4 justify-end my-4">
@@ -286,6 +274,7 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
           >
             Cancelar
           </Button>
+
           <Button
             disabled={isRequestLoading}
             className="bg-primary-200 text-primary-600"

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Appointment } from "../../models/Appointment";
 import { AppointmentForm } from "./components/AppointmentForm";
 import { Input } from "../../components/Input";
@@ -16,6 +16,11 @@ export const Appointments = () => {
   const [appointmentSelected, setAppointmentSelected] = React.useState("");
 
   const nameInputValue = nameInput.current?.value || "";
+
+  const hasAppointments = useMemo(
+    () => appointments?.length === 0 || (!appointments && !loading),
+    [appointments, loading]
+  );
 
   const reprogram = (appointmentId: string) => {
     setAppointmentSelected(appointmentId);
@@ -90,9 +95,7 @@ export const Appointments = () => {
       )}
 
       <ul className="w-full flex flex-col gap-4 overflow-x-hidden">
-        {(appointments?.length === 0 || (!appointments && !loading)) && (
-          <p>No hay citas</p>
-        )}
+        {hasAppointments && <p>No hay citas</p>}
         {(appointments as Appointment[] | null)?.map((appointment) => (
           <li
             key={appointment.id}
