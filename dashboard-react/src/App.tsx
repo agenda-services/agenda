@@ -4,9 +4,11 @@ import { Appointments } from "./pages/Appointments";
 
 function App() {
   return (
+    <>
     <MainLayout>
       <Appointments />
     </MainLayout>
+    </>
   );
 }
 
