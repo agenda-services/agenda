@@ -14,6 +14,7 @@ COMMIT_MESSAGE=""
 
 VALID=true
 SHOW_COMMIT=false
+TITLES=()
 
 while read -r line; do
   SHOW_COMMIT=false
@@ -58,6 +59,22 @@ while read -r line; do
     VALID=false
     SHOW_COMMIT=true
   fi
+
+  title=$(echo "$COMMIT_MESSAGE" | awk  '
+    BEGIN { RS="What|Why"; ORS="" } # Dividir en secciones usando "What" como delimitador
+    NR == 1 { print }          # Imprimir solo la primera sección
+  ')
+
+  for item in "$TITLES"; do
+    if [[ "$item" == "$title" ]]; then
+      echo "❌ Error: commit title is repeated"
+      VALID=false
+      SHOW_COMMIT=true
+      break
+    fi
+  done
+
+  TITLES+=$title
 
   if [[ "$SHOW_COMMIT" == true ]]; then
     echo "📄 Commit '$COMMIT_HASH':"$'\n'
