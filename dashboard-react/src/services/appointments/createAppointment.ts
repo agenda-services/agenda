@@ -1,4 +1,4 @@
-import { APPOINTMENTS_URL, fetchClient } from ".";
+import { APPOINTMENTS_URL, fetchClient } from "..";
 import { Appointment, CreateAppointment } from "../../models/Appointment";
 
 export const createAppointmentService = async (
