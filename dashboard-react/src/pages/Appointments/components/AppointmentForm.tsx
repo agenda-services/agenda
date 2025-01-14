@@ -201,7 +201,7 @@ export const AppointmentForm: React.FunctionComponent<AppointmentFormProps> = ({
           Nombres
           <Input
             defaultValue={defaultFirstName}
-            formRegister={{ ...register("firstname") }}
+            formRegister={register("firstname")}
             disabled={isInputDisable}
             error={getError("firstname")}
           />
