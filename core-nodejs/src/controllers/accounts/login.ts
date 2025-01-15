@@ -6,7 +6,11 @@ import {
 } from "../../services/accountsService";
 import { StatusCodes } from "http-status-codes";
 import { errAccountNotFound } from "../../repositories/accountRepository";
-import { AGENDA_API_KEY, AGENDA_REFRESH_API_KEY } from "../../shared/constants";
+import {
+  AGENDA_API_KEY,
+  AGENDA_REFRESH_API_KEY,
+  HOME_DOMAIN
+} from "../../shared/constants";
 
 export default async function (req: Request, res: Response) {
   const { username, password } = req.body;
@@ -20,19 +24,19 @@ export default async function (req: Request, res: Response) {
     const account = await getAccountByUsernameAndPass(username, password);
     const response = await generateTokens(account);
 
-    res.cookie(AGENDA_API_KEY, response.access_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict"
-    });
-
-    res.cookie(AGENDA_REFRESH_API_KEY, response.refresh_access_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict"
-    });
-
-    return res.status(StatusCodes.OK).json(response);
+    res
+      .cookie(AGENDA_API_KEY, response.access_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none"
+      })
+      .cookie(AGENDA_REFRESH_API_KEY, response.refresh_access_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none"
+      })
+      .status(StatusCodes.OK)
+      .json(response);
   } catch (error) {
     if (error === errAccountNotFound) {
       responseBadRequest(res, "invalid username or password");

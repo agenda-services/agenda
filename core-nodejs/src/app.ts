@@ -23,7 +23,7 @@ export const app: Express = express();
 app.use(
   cors({
     credentials: true,
-    origin: ["http://localhost:5173"]
+    origin: ["http://localhost:5173", "https://agenda-8e0fa.firebaseapp.com"]
   })
 );
 // @ts-ignore
