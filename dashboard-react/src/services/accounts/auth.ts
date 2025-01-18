@@ -7,6 +7,20 @@ export const redirectGoogleAuth = async () => {
   window.location.href = responseJson.url;
 };
 
+export const callbackGoogle = async (code: string) => {
+  const response = await fetchClient(
+    ACCOUNTS_URL + "auth/google/callback?code=" + code
+  );
+
+  const responseJson = await response.json();
+
+  if (!response.ok) {
+    throw Error(JSON.stringify(responseJson));
+  }
+
+  return responseJson;
+};
+
 export const authPassword = async (username: string, pass: string) => {
   const body = new URLSearchParams();
 
