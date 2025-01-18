@@ -2,8 +2,8 @@ import { render, screen } from "@testing-library/react";
 import App from "./App";
 
 describe("App Component", () => {
-  it("renders correctly", () => {
+  it("renders correctly", async () => {
     render(<App />);
-    expect(screen.getAllByTestId("header")).toBeTruthy();
+    expect(await screen.getAllByTestId("login")).toBeTruthy();
   });
 });

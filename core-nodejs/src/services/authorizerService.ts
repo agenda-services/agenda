@@ -6,6 +6,7 @@ import {
   GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET,
   GOOGLE_REDIRECT_URI,
+  HOME_DASHBOARD,
   JWT_PRIVATE_KEY
 } from "../shared/constants";
 import axios from "axios";
@@ -73,7 +74,7 @@ export const getGoogleProfile = async (
     client_id: GOOGLE_CLIENT_ID,
     client_secret: GOOGLE_CLIENT_SECRET,
     code,
-    redirect_uri: GOOGLE_REDIRECT_URI,
+    redirect_uri: HOME_DASHBOARD,
     grant_type: "authorization_code"
   });
 

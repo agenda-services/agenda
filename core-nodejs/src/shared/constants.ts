@@ -8,7 +8,9 @@ export const REFRESH_KEY_EXPIRE_TIME = "15d";
 export const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || "";
 export const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || "";
 export const GOOGLE_REDIRECT_URI =
+  process.env.GOOGLE_REDIRECT_URI ||
   "http://localhost:3000/api/v1/accounts/auth/google/callback";
 export const COOKIE_SECRET = process.env.COOKIE_SECRET || "";
 export const HOME_DASHBOARD =
-  process.env.HOME_DASHBOARD || "http://localhost:5173/";
+  process.env.HOME_DASHBOARD || "http://localhost:5173";
+export const HOME_DOMAIN = process.env.HOME_DOMAIN || "localhost";
