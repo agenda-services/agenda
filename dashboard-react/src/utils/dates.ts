@@ -1,7 +1,7 @@
 export const formatDate = (date: Date | undefined) => {
   if (!date) return "";
 
-  new Intl.DateTimeFormat("es-ES", {
+  return new Intl.DateTimeFormat("es-ES", {
     weekday: "long",
     day: "numeric",
     month: "long"
