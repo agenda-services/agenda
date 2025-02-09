@@ -7,5 +7,6 @@ export const cn = (...inputs: ClassValue[]) => {
 
 export enum Color {
   Info = "info",
-  Error = "error"
+  Error = "error",
+  Primary = "primary"
 }
