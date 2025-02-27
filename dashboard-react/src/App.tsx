@@ -13,6 +13,7 @@ import { Login } from "./pages/Login";
 import { getAccount } from "./services/accounts/user";
 import { useEffect } from "react";
 import { callbackGoogle } from "./services/accounts/auth";
+import { SideBar } from "./components/SideBar";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = localStorage.getItem("isLogged") === "true";
@@ -42,11 +43,12 @@ function App() {
         <Route
           path="/"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <MainLayout>
+                <SideBar />
                 <Appointments />
               </MainLayout>
-            </ProtectedRoute>
+            // </ProtectedRoute>
           }
         />
         <Route path="login" element={<Login />} />
