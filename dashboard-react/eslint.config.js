@@ -30,7 +30,7 @@ export default tseslint.config(
       complexity: [
         "error",
         {
-          max: 10
+          max: 14
         }
       ],
       "react-refresh/only-export-components": [

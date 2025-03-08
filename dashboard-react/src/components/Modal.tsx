@@ -37,14 +37,14 @@ export const Modal: FunctionComponent<ModalProps> = ({ isOpen, onClose, children
     <div data-testid="modal">
       <div
         data-testid="modal-overlay"
-        className={`fixed inset-0 bg-black/50 z-6 transition-opacity duration-100 ease-in-out ${isAnimating ? 'opacity-100' : 'opacity-0'
-          }`}
+        className={`fixed inset-0 bg-black/50 z-6 transition-opacity duration-100 ease-in-out ${isAnimating ? "opacity-100" : "opacity-0"
+        }`}
         onClick={onClose}
       />
       <div
         data-testid="modal-content"
-        className={`flex flex-col fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 rounded-lg bg-white min-w-[300px] min-h-[400px] transition-all duration-100 ease-in-out ${isAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
-          }`}
+        className={`flex flex-col fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-6 rounded-lg bg-white min-w-[300px] min-h-[400px] transition-all duration-100 ease-in-out ${isAnimating ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        }`}
       >
         {children}
       </div>

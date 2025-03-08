@@ -25,7 +25,7 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
   const { loading: loadingUpdate, updateAppointement } = useUpdateAppointment();
 
   const [action, setAction] = useState<AppointmentStatus>(appointment.status);
-  const now = new Date();
+  const [now] = useState(new Date());
   const isCurrentDate = useMemo(() => {
     if (!appointment.date) return false;
 
@@ -45,7 +45,7 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
   const isOldDate = useMemo(() => {
     if (!appointment.date) return false;
 
-    now.getTime() > appointment.date.getTime() && !isCurrentDate;
+    return now.getTime() > appointment.date.getTime() && !isCurrentDate;
   }, [now, appointment, isCurrentDate]);
 
   const nextDatesClass = "opacity-60 border-green-400";

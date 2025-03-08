@@ -43,7 +43,7 @@ export const Login = () => {
         navigate("/", { replace: true });
       })
       .catch(() => localStorage.setItem("isLogged", "false"));
-  }, []);
+  }, [navigate]);
 
   const errorReq = useRef("");
   const [isLoadingAuth, setIsLoadingAuth] = useState(false);
@@ -64,7 +64,7 @@ export const Login = () => {
     } catch (error) {
       try {
         errorReq.current = JSON.parse((error as Error).message).message;
-      } catch (e) {
+      } catch {
         errorReq.current = (error as Error).message;
       }
 
@@ -90,14 +90,14 @@ export const Login = () => {
       } catch (error) {
         try {
           errorReq.current = JSON.parse((error as Error).message).message;
-        } catch (e) {
+        } catch {
           errorReq.current = (error as Error).message;
         }
 
         setIsLoadingAuth(false);
       }
     },
-    [isLoadingAuth, errorReq, setIsLoadingAuth]
+    [isLoadingAuth, errorReq, setIsLoadingAuth, navigate]
   );
 
   return (
@@ -107,7 +107,7 @@ export const Login = () => {
     >
       <div
         className="h-min flex flex-col md:flex-row md:justify-center items-center shadow-primary-400"
-        style={{ boxShadow: `-30px -30px 1px #7ed956` }}
+        style={{ boxShadow: "-30px -30px 1px #7ed956" }}
       >
         <div className="hidden md:block h-full md:h-[600px] w-[400px] bg-black">
           <img

@@ -210,7 +210,6 @@ const mockAppointments: Appointment[] = [
   }
 ];
 
-
 type FormValues = {
   fullname: string;
   phone_number: string;
@@ -220,9 +219,8 @@ const formSchema = Joi.object({
   fullname: Joi.string()
     .required()
     .messages({ "string.empty": "El nombre es necesario" }),
-  phone_number: Joi.string().optional().allow(""),
+  phone_number: Joi.string().optional().allow("")
 });
-
 
 interface CalendarProps {
   initialDate?: Date;
@@ -240,11 +238,8 @@ export const Calendar: FunctionComponent<CalendarProps> = ({ initialDate }) => {
     handleSubmit,
     getValues,
     setError,
-    reset,
-    setValue,
     formState: { errors }
   } = useForm<FormValues>({ resolver: joiResolver(formSchema) });
-
 
   const offsetDaysMemo = useMemo(
     () => Array.from(Array(offsetDays).keys()),
@@ -253,9 +248,14 @@ export const Calendar: FunctionComponent<CalendarProps> = ({ initialDate }) => {
 
   const daysMemo = useMemo(() => Array.from(Array(days).keys()), [days]);
 
-  const isValidDate = useCallback((day: number) => {
-    return new Date() < new Date(date.getFullYear(), date.getMonth(), day + 1);
-  }, []);
+  const isValidDate = useCallback(
+    (day: number) => {
+      return (
+        new Date() < new Date(date.getFullYear(), date.getMonth(), day + 1)
+      );
+    },
+    [date]
+  );
 
   const getDays = useCallback(
     (month: number, year: number) =>
@@ -280,7 +280,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({ initialDate }) => {
         return prev;
       });
     },
-    [date, setDays, setOffsetDays]
+    [date, setDays, getDays, setOffsetDays, getOffsetDays]
   );
 
   const filterAppointmentDay = (date: Date): Appointment[] => {
@@ -293,12 +293,15 @@ export const Calendar: FunctionComponent<CalendarProps> = ({ initialDate }) => {
   const getError = (name: keyof FormValues): string =>
     errors[name]?.message || "";
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => { console.log(data) }
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    console.log(data);
+    setIsModalOpen(false);
+  };
 
   useEffect(() => {
     setDays(getDays(date.getMonth(), date.getFullYear()));
     setOffsetDays(getOffsetDays(date.getMonth(), date.getFullYear()));
-  }, []);
+  }, [date, setDays, getDays, setOffsetDays, getOffsetDays]);
 
   const handleNext = () => {
     const fullname = getValues("fullname");
@@ -342,7 +345,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({ initialDate }) => {
           )
         )}
       </section>
-      <section className="grid grid-cols-7 h-full gap-[2px]">
+      <section className="grid grid-cols-7 p-1 auto-rows-[80px] h-full gap-[2px]">
         {offsetDaysMemo.map((_, i) => (
           <span key={`empty-${i}`} className="w-full h-full"></span>
         ))}
@@ -372,7 +375,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({ initialDate }) => {
             >
               {day + 1}
             </span>
-            <ul className="flex flex-col items-start gap-1 h-full overflow-hidden">
+            <ul className="flex flex-col items-start gap-1 h-full overflow-auto">
               {filterAppointmentDay(
                 new Date(date.getFullYear(), date.getMonth(), day + 1)
               ).map((appointment: Appointment) => (
@@ -388,33 +391,53 @@ export const Calendar: FunctionComponent<CalendarProps> = ({ initialDate }) => {
         ))}
       </section>
       <Modal isOpen={isModalOpen} onClose={handleModalClose}>
-        <h2 className="text-2xl font-semibold text-center text-primary-600">Excelente elección!</h2>
-        <img className="w-full h-40 object-contain" src="/appointment-request.png" alt="appointment request" />
+        <h2 className="text-2xl font-semibold text-center text-primary-600">
+          Excelente elección!
+        </h2>
+        <img
+          className="w-full h-40 object-contain"
+          src="/appointment-request.png"
+          alt="appointment request"
+        />
 
         <form
           className="py-2 w-full h-full flex gap-4 overflow-hidden relative"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className={cn(
-            "px-4 flex flex-col gap-2 transition-transform duration-300 w-full",
-            formStep === 2 ? "absolute -translate-x-full" : "translate-x-0"
-          )}>
+          <div
+            className={cn(
+              "px-4 flex flex-col gap-2 transition-transform duration-300 w-full",
+              formStep === 2 ? "absolute -translate-x-full" : "translate-x-0"
+            )}
+          >
             <label className="flex flex-col gap-2">
               Tu nombre porfavor
-              <Input formRegister={register("fullname")} error={getError("fullname")} />
+              <Input
+                formRegister={register("fullname")}
+                error={getError("fullname")}
+              />
             </label>
-            <Button className="text-center" color={Color.Primary} onClick={handleNext}>
+            <Button
+              className="text-center"
+              color={Color.Primary}
+              onClick={handleNext}
+            >
               Siguiente
             </Button>
           </div>
 
-          <div className={cn(
-            "px-4 flex flex-col gap-2 transition-transform duration-300 w-full",
-            formStep === 1 ? "absolute translate-x-full" : "translate-x-0"
-          )}>
+          <div
+            className={cn(
+              "px-4 flex flex-col gap-2 transition-transform duration-300 w-full",
+              formStep === 1 ? "absolute translate-x-full" : "translate-x-0"
+            )}
+          >
             <label className="flex flex-col gap-2">
               Celular
-              <Input formRegister={register("phone_number")} error={getError("phone_number")} />
+              <Input
+                formRegister={register("phone_number")}
+                error={getError("phone_number")}
+              />
             </label>
             <Button type="submit" color={Color.Primary}>
               Enviar
@@ -422,6 +445,6 @@ export const Calendar: FunctionComponent<CalendarProps> = ({ initialDate }) => {
           </div>
         </form>
       </Modal>
-    </div >
+    </div>
   );
 };
