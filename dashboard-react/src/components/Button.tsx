@@ -4,7 +4,8 @@ import { cn, Color } from "../utils/tailwindCss";
 
 const colorOptions: Record<Color, string> = {
   [Color.Info]: "bg-blue-200 text-blue-600",
-  [Color.Error]: "bg-red-200 text-red-600"
+  [Color.Error]: "bg-red-200 text-red-600",
+  [Color.Primary]: "bg-primary-200 text-primary-600"
 };
 
 interface ButtonProps extends React.PropsWithChildren {
@@ -32,7 +33,7 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
       className={cn(
         className,
         color ? colorOptions[color] : "",
-        "text-lg py-2 px-4 text-center rounded-lg font-semibold flex gap-2 items-center",
+        "text-lg py-2 px-4 text-center rounded-lg font-semibold flex gap-2 justify-center items-center",
         disabled ? "opacity-65" : ""
       )}
       onClick={onClick}

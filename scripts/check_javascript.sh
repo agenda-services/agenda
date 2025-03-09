@@ -21,12 +21,13 @@ for file in $MODIFIED_FILES; do
     if [[ -f "$dir/package.json" ]]; then
       if [[ ! " ${PROCESSED_DIRS[@]} " =~ " $dir " ]]; then
         echo "Running lint for project in $dir..."
-        OUTPUT=$(cd "$dir" && npm i && npm run lint && npm run test 2>&1)
+        cd "$dir" && npm i
+        OUTPUT=$(npm run lint && npm run test 2>&1)
         wait $!
 
         echo "$OUTPUT"
 
-        if echo "$OUTPUT" | grep -qi "error:"; then
+        if echo "$OUTPUT" | grep -qi "\berror\b"; then
           echo "❌ Javascript errors found in $dir. Exiting with error."
           exit 1
         fi

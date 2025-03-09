@@ -17,3 +17,11 @@ export const formatHour = (date: Date | undefined, hour12 = true) => {
     hour12
   }).format(date);
 };
+
+export const dateMonth = (date: Date | undefined) => {
+  if (!date) return "";
+
+  return new Intl.DateTimeFormat("es-ES", {
+    month: "long"
+  }).format(date);
+};
