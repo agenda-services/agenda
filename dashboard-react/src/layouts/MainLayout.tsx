@@ -7,10 +7,10 @@ export const MainLayout: React.FunctionComponent<React.PropsWithChildren> = ({
   children
 }) => {
 
-  const [visibleSidebar, setVisibleSidebar] = useState(false);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
   const handleToggleSidebar = () => {
-    setVisibleSidebar(prev => !prev);
+    setIsSidebarVisible(prev => !prev);
   };
 
   return (
@@ -21,7 +21,7 @@ export const MainLayout: React.FunctionComponent<React.PropsWithChildren> = ({
       >
         <nav className="flex w-full justify-between items-center max-w-[700px] min-w-[250px] m-auto px-5">
           <FontAwesomeIcon icon={faBars} onClick={handleToggleSidebar} />
-          <SideBar visible={visibleSidebar} handleToggleSidebar={handleToggleSidebar} />
+          <SideBar visible={isSidebarVisible} handleToggleSidebar={handleToggleSidebar} />
           <h2>Angy Gonzaléz</h2>
         </nav>
       </header>

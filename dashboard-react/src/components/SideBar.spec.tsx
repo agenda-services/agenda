@@ -1,38 +1,60 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { SideBar } from "./SideBar";
+import { MemoryRouter } from "react-router-dom";
 
 describe("SideBar component", () => {
   const visible = true;
   const handleToggleSidebar = vi.fn();
 
   it("renders the component", async () => {
-    render(<SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} />);
+    render(<MemoryRouter><SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} /> </MemoryRouter>);
+
     expect(await screen.findAllByTestId("sidebar")).toBeTruthy();
   });
 
   it("renders Navigation Button Clientes", async () => {
-    render(<SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} />);
+    render(<MemoryRouter><SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} /> </MemoryRouter>);
+
     expect(await screen.findAllByTestId("clients")).toBeTruthy()
   })
 
   it("renders Navigation Button Calendario", async () => {
-    render(<SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} />);
+    render(<MemoryRouter><SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} /> </MemoryRouter>);
+
     expect(await screen.findAllByTestId("calendar")).toBeTruthy()
   })
-  it("navigates to Clients component", async () => {
+
+  it("calls handleToggleSidebar when clicking on the overlay", async () => {
     render(
+      <MemoryRouter>
+        <SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} />
+      </MemoryRouter>
+    );
+    const overlay = screen.getByTestId("closeSidebar");
 
-      <SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} />
+    fireEvent.click(overlay);
 
-    )
+    await waitFor(() => {
+      expect(handleToggleSidebar).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("navigates to Clients component", async () => {
+    render(<MemoryRouter><SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} /> </MemoryRouter>);
+
     const clientsLink = await screen.findByText("Clientes");
     fireEvent.click(clientsLink)
+
+    expect(handleToggleSidebar).toBeCalledTimes(1)
+
   })
+
   it("navigates to Calendar component", async () => {
-    render(
-      <SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} />
-    )
-    const clientsLink = await screen.findByText("Calendario");
-    fireEvent.click(clientsLink)
+    render(<MemoryRouter><SideBar visible={visible} handleToggleSidebar={handleToggleSidebar} /> </MemoryRouter>);
+
+    const calendarLink = await screen.findByText("Calendario");
+    fireEvent.click(calendarLink)
+
+    expect(handleToggleSidebar).toBeCalledTimes(1)
   })
 });
