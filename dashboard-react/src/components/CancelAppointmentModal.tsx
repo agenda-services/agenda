@@ -1,22 +1,21 @@
 import { Button } from "./Button";
 import { Color } from "../utils/tailwindCss";
 import { faCheck, faClose } from "@fortawesome/free-solid-svg-icons";
-import { formatHour } from "../utils/dates";
+import { formatDate, formatHour } from "../utils/dates";
 
 interface CancelAppointmentModalProps {
   handleModalClose: () => void
   confirmAppointmentCancellation: () => void
-  person: string
+  personName: string
   date: Date
 }
 
-export const CancelAppointmentModal: React.FunctionComponent<CancelAppointmentModalProps> = ({ handleModalClose, confirmAppointmentCancellation, person, date }) => {
+export const CancelAppointmentModal: React.FunctionComponent<CancelAppointmentModalProps> = ({ handleModalClose, confirmAppointmentCancellation, personName, date }) => {
 
 
   return (
-    <div data-testid="cancelAppointmentModal" className="flex flex-col items-center justify-between">
-      <h1 className="text-center">{`¿Estas seguro de querer cancelar la reserva de ${person} para el ${date.toLocaleDateString()} a las ${formatHour(date)}`}</h1>
-      <br />
+    <div data-testid="cancelAppointmentModal" className="flex flex-col items-center justify-between gap-4">
+      <h1 className="text-center">{`¿Estas seguro de querer cancelar la reserva de ${personName} para el ${formatDate(date)} a las ${formatHour(date)}?`}</h1>
       <div className="flex justify-between gap-4">
         <Button
           data-testid="cancelButton"
