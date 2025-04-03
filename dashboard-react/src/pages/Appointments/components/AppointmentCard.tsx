@@ -175,7 +175,7 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
         />
       </div>
       <Modal isOpen={isModalOpen} onClose={closeModal}>
-        <CancelAppointmentModal handleModalClose={closeModal} confirmAppointmentCancellation={cancelAppointment} person={appointment.person?.firstname} date={appointment.date} />
+        <CancelAppointmentModal handleModalClose={closeModal} confirmAppointmentCancellation={cancelAppointment} personName={appointment.person?.firstname} date={appointment.date} />
       </Modal>
     </article>
   );
