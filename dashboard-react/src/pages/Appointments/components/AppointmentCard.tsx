@@ -11,6 +11,9 @@ import {
   IconDefinition
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Modal } from "../../../components/Modal";
+import { CancelAppointmentModal } from "../../../components/CancelAppointmentModal";
+
 
 interface AppointmentCardProps {
   appointment: Appointment;
@@ -26,6 +29,8 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
 
   const [action, setAction] = useState<AppointmentStatus>(appointment.status);
   const [now] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const isCurrentDate = useMemo(() => {
     if (!appointment.date) return false;
 
@@ -99,6 +104,44 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
     }, 500);
   }, []);
 
+  const closeModal = () => {
+    setIsModalOpen(false)
+  }
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const cancelAppointment = async () => {
+    try {
+      await updateAppointement(appointment.id, {
+        status: AppointmentStatus.Canceled
+      });
+
+      closeModal();
+
+      setAction(AppointmentStatus.Canceled);
+
+      addAnimationToCard(appointment.id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const confirmAppointment = async () => {
+    try {
+      await updateAppointement(appointment.id, {
+        status: AppointmentStatus.Done
+      });
+
+      setAction(AppointmentStatus.Done);
+
+      addAnimationToCard(appointment.id);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <article
       className={cn(
@@ -127,34 +170,13 @@ export const AppointmentCard: React.FunctionComponent<AppointmentCardProps> = ({
         </p>
         <ActionsCard
           reprogram={() => reprogram(appointment.id)}
-          cancel={async () => {
-            try {
-              await updateAppointement(appointment.id, {
-                status: AppointmentStatus.Canceled
-              });
-
-              setAction(AppointmentStatus.Canceled);
-
-              addAnimationToCard(appointment.id);
-            } catch (error) {
-              console.log(error);
-            }
-          }}
-          done={async () => {
-            try {
-              await updateAppointement(appointment.id, {
-                status: AppointmentStatus.Done
-              });
-
-              setAction(AppointmentStatus.Done);
-
-              addAnimationToCard(appointment.id);
-            } catch (error) {
-              console.log(error);
-            }
-          }}
+          cancel={openModal}
+          done={confirmAppointment}
         />
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <CancelAppointmentModal handleModalClose={closeModal} confirmAppointmentCancellation={cancelAppointment} personName={appointment.person?.firstname} date={appointment.date} />
+      </Modal>
     </article>
   );
 };
