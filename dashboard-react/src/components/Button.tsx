@@ -34,7 +34,8 @@ export const Button: React.FunctionComponent<ButtonProps> = ({
         className,
         color ? colorOptions[color] : "",
         "text-lg py-2 px-4 text-center rounded-lg font-semibold flex gap-2 justify-center items-center",
-        disabled ? "opacity-65" : ""
+        disabled ? "opacity-65" : "",
+        className
       )}
       onClick={onClick}
     >
