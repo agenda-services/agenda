@@ -14,6 +14,7 @@ import { getAccount } from "./services/accounts/user";
 import { useEffect } from "react";
 import { callbackGoogle } from "./services/accounts/auth";
 import { Calendar } from "./components/Calendar";
+import { Clients } from "./pages/Clients";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = localStorage.getItem("isLogged") === "true";
@@ -52,6 +53,15 @@ function App() {
         />
         <Route path="login" element={<Login />} />
         <Route path="request" element={<Calendar />} />
+        <Route
+          path="clients"
+          element={
+            <MainLayout>
+              <Clients />
+            </MainLayout>
+          }
+
+        />
       </Routes>
     </BrowserRouter>
   );
