@@ -67,7 +67,7 @@ export const Clients = () => {
                   <FontAwesomeIcon
                     icon={faPhone}
                   />
-                  {modifiedPhoneNumber(client.phone_number)}
+                  {client.phone_number ? modifiedPhoneNumber(client.phone_number) : "No hay número"}
                 </li>
               </Link>
             </ul>
